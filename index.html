@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>GrooveTuner</title>
+    <link rel="stylesheet" type="text/css" href="lib/svg.select.css">
+    <script type="text/javascript" src="lib/svg.js"></script>
+    <script type="text/javascript" src="lib/svg.draw.js"></script>
+    <script type="text/javascript" src="lib/svg.select.js"></script>
+    <script type="text/javascript" src="lib/svg.resize.js"></script>
+    <script type="text/javascript" src="lib/osc.js"></script>
+    <script type="text/javascript" src="lib/Tone.js"></script>
+    <script type="text/javascript" src="lib/ToneMidi.js"></script>
+    <script type="text/javascript" src="lib/StartAudioContext.js"></script>
+    <script type="text/javascript" src="lib/animitter.js"></script>
+    <script type="text/javascript" src="js/pianoRollClass.js"></script>
+    <script type="text/javascript" src="samp/samp.js"></script>
+    <script type="text/javascript" src="js/browserIndex.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+</head>
+
+<body>
+    <h2 id="title1"> GrooveTuner: Welcome to the midi precise editor with Torquetuner</h2>
+    
+    <!-- tabindex="0" used to make div focusable, allowing for keyboard shortcuts -->
+    <input type="file" id="file" />
+    <div id="drawing"></div>
+
+    <ul>
+    <li>
+        Note: this is currently only working with laptop trackpads - normal mouse behavior will be weird (to be fixed
+        soon)
+    </li>
+    <li>
+        Double click on an empty cell to add a note.
+    </li>
+    <li>
+        Click and drag a note to move it.
+    </li>
+    <li>
+        Click and drag the ends of a note to resize it.
+    </li>
+    <li>
+        Hold down Ctrl and move your mouse to scroll.
+    </li>
+    <li>
+        Hold down Alt and move your mouse to zoom.
+    </li>
+    <li>
+        Click and drag to highlight a selection. You can then drag/resize groups of notes. You can also hold down shift
+        and click to add notes to a group selection.
+    </li>
+    <li>
+        Hit backspace/delete to delete notes.
+    </li>
+    <li>
+        Hit Cmd-z/Cmd+Shift+z to undo/redo note editing actions.
+    </li>
+    <li>
+        Press the arrow keys to move selected notes.
+    </li>
+    <li>
+        Use Cmd-c/Cmd-v to copy/paste note selections. Selections will be pasted at the vertical cursor position.
+    </li>
+    </ul>
+</body>
+
+</html>
