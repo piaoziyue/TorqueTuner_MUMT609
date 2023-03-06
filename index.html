@@ -1,31 +1,66 @@
 <!DOCTYPE html>
-<html>
+<html class="app-html">
 
 <head>
+    
     <title>GrooveTuner</title>
-    <link rel="stylesheet" type="text/css" href="lib/svg.select.css">
+    <link rel='stylesheet' href='lib/style.css'>
     <script type="text/javascript" src="lib/svg.js"></script>
     <script type="text/javascript" src="lib/svg.draw.js"></script>
     <script type="text/javascript" src="lib/svg.select.js"></script>
     <script type="text/javascript" src="lib/svg.resize.js"></script>
-    <script type="text/javascript" src="lib/osc.js"></script>
+    <!-- <script type="text/javascript" src="lib/osc.js"></script> -->
     <script type="text/javascript" src="lib/Tone.js"></script>
     <script type="text/javascript" src="lib/ToneMidi.js"></script>
     <script type="text/javascript" src="lib/StartAudioContext.js"></script>
     <script type="text/javascript" src="lib/animitter.js"></script>
     <script type="text/javascript" src="js/pianoRollClass.js"></script>
-    <script type="text/javascript" src="samp/samp.js"></script>
+    <!-- <script type="text/javascript" src="samp/samp.js"></script> -->
+    <!-- <script src="https://unpkg.com/tone"></script> -->
+    <script type="text/javascript" src="js/parse.js"></script>
     <script type="text/javascript" src="js/browserIndex.js"></script>
-    <script type="text/javascript" src="js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/webmidi@latest/dist/iife/webmidi.iife.js"></script>
+
+    <script src='lib/jquery.min.js'></script>
+    <script src='lib/instruments.js'></script>
+    <script src='lib/jsmidgen.js'></script>
+    <script src='lib/midi-file-parser.js'></script>
+    <script src='lib/midi-converter.js'></script>
+    <script src='lib/dropzone.js'></script>
+    <script src='lib/MIDI/AudioDetect.js'></script>
+    <script src='lib/MIDI/LoadPlugin.js'></script>
+    <script src='lib/MIDI/Plugin.js'></script>
+    <script src='lib/MIDI/Player.js'></script>
+    <script src='lib/MIDI/DOMLoader.XMLHttp.js'></script>
+    <script src="lib/MIDI/Base64.js" type="text/javascript"></script>
+    <script src="lib/MIDI/base64binary.js" type="text/javascript"></script>
 </head>
 
 <body>
     <h2 id="title1"> GrooveTuner: Welcome to the midi precise editor with Torquetuner</h2>
-    
-    <!-- tabindex="0" used to make div focusable, allowing for keyboard shortcuts -->
-    <input type="file" id="file" />
-    <div id="drawing"></div>
 
+    <!-- tabindex="0" used to make div focusable, allowing for keyboard shortcuts -->
+    <div class='toolbar'>
+        <div class='button' id='midi-upload'>Upload</div>
+        <div class='button' id='midi-clear'>Clear</div>
+        <!-- <div class='content' id="midi-info"></div> -->
+        
+    </div>
+    
+    <script src='js/sequencer.js'></script>
+
+    <div data-role = 'header'>
+        <center>
+            <h3 id="midi-info"><br></h3>
+            <div id="drawing"></div>
+        </center>
+    </div>
+    
+    
+
+    
+
+    <!-- <script src='js/midifile.js'></script>
     <ul>
     <li>
         Note: this is currently only working with laptop trackpads - normal mouse behavior will be weird (to be fixed
@@ -62,7 +97,7 @@
     <li>
         Use Cmd-c/Cmd-v to copy/paste note selections. Selections will be pasted at the vertical cursor position.
     </li>
-    </ul>
+    </ul> -->
 </body>
 
 </html>

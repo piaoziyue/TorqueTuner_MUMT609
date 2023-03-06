@@ -1,4 +1,4 @@
-import { Midi } from "./lib/ToneMidi.js";
+// import { Midi } from "/lib/ToneMidi.js";
 
 // Holds information for a point in terms of time and note (which is converted to coordinates later)
 class Point {

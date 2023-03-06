@@ -1,4 +1,4 @@
-'use strict';
+// 'use strict';
 /*
 basic strategy for using SVG:
 In SVG you can draw on an arbitrarily large plane and have a 'viewbox' that shows a sub-area of that.
@@ -99,12 +99,14 @@ class PianoRoll {
         //svg elements in the pianoRoll background
         this.backgroundElements;
 
-        this.quarterNoteWidth = 120; //in pixels
-        this.noteHeight = 20; //in pixels
+        this.quarterNoteWidth = 76; //in pixels
+        this.noteHeight = 16; //in pixels
         this.whiteNotes = [0, 2, 4, 5, 7, 9, 11];
         this.noteSubDivision = 16; //where to draw lines and snap to grid
         this.timeSignature = 4/4; //b
         this.numMeasures = 100;
+        this.base = 0; //the piano roll panel starting xpos
+
         // Every quarter note region of the background will be alternately colored.
         // In ableton this changes on zoom level - TODO - is this even used? Could ignore this behavior
         this.sectionColoringDivision = 4; 
@@ -116,12 +118,12 @@ class PianoRoll {
 
         this.backgroundColor1 = '#ddd';
         this.backgroundColor2 = '#bbb';
-        this.noteColor = '#f23';
-        this.selectedNoteColor = '#2ee'
+        this.noteColor = '#f88';
+        this.selectedNoteColor = '#f4dd33'
         this.thickLineWidth = 1.8;
         this.thinLineWidth = 1;
-        this.viewportHeight = 720;
-        this.viewportWidth = 1280;
+        this.viewportHeight = 360;
+        this.viewportWidth = 1200;
         this.maxZoom;
         this.noteCount = 0;
         // Create an SVGPoint for future math
@@ -185,9 +187,6 @@ class PianoRoll {
         // attach the interaction handlers not related to individual notes
         this.attachHandlersOnBackground(this.backgroundElements, this.svgRoot);
 
-        this.addNote(55, 0, 1, false);
-        this.addNote(60, 0, 1, false);
-
 
         //set the view-area so we aren't looking at the whole 127 note 100 measure piano roll
         this.svgRoot.viewbox(0, 55*this.noteHeight, this.viewportWidth, this.viewportHeight);
@@ -214,21 +213,21 @@ class PianoRoll {
         this.backgroundElements = new Set();
         for(let i = 0; i < this.numMeasures; i++){
             let color = i % 2 == 0 ? this.backgroundColor1 : this.backgroundColor2;
-            let panel = this.svgRoot.rect(measureWidth, this.pianoRollHeight).move(i*measureWidth, 0).fill(color);
+            let panel = this.svgRoot.rect(measureWidth + this.base, this.pianoRollHeight).move(i*measureWidth + this.base, 0).fill(color);
             this.backgroundElements.add(panel);
         }
         for(let i = 1; i < numVertLines; i++){
             let xPos = i*vertLineSpace;
             let strokeWidth = xPos % this.quarterNoteWidth == 0 ? this.thickLineWidth : this.thinLineWidth;
-            let line = this.svgRoot.line(xPos, 0, xPos, this.pianoRollHeight).stroke({width: strokeWidth});
+            let line = this.svgRoot.line(xPos + this.base, 0, xPos + this.base, this.pianoRollHeight).stroke({width: strokeWidth});
             this.backgroundElements.add(line);
         }
         for(let i = 1; i < this.NUM_MIDI_NOTES; i++){
-            let line = this.svgRoot.line(0, i*this.noteHeight, this.pianoRollWidth, i*this.noteHeight).stroke({width: this.thinLineWidth});
+            let line = this.svgRoot.line(0 + this.base, i*this.noteHeight, this.pianoRollWidth + this.base, i*this.noteHeight).stroke({width: this.thinLineWidth});
             this.backgroundElements.add(line);
         }
 
-        this.cursorElement = this.svgRoot.rect(this.cursorWidth, this.pianoRollHeight).move(this.cursorPosition * this.quarterNoteWidth, 0).fill(this.noteColor);
+        this.cursorElement = this.svgRoot.rect(this.cursorWidth, this.pianoRollHeight).move(this.cursorPosition * this.quarterNoteWidth + this.base, 0).fill(this.noteColor);
         this.playCursorElement = this.svgRoot.rect(this.cursorWidth, this.pianoRollHeight).move(this.cursorPosition * this.quarterNoteWidth, 0).fill('#2d2').opacity(0);
         this.cursorElement.animate(1500, '<>').attr({fill: '#fff'}).loop(Infinity, true);
     }
@@ -236,13 +235,13 @@ class PianoRoll {
 
     //duration is number of quarter notes, pitch is 0-indexed MIDI
     addNote(pitch, position, duration, avoidHistoryManipulation){
-        let rect = this.svgRoot.rect(duration*this.quarterNoteWidth, this.noteHeight).move(position*this.quarterNoteWidth, (127-pitch)*this.noteHeight).fill(this.noteColor);
+        let rect = this.svgRoot.rect(duration*this.quarterNoteWidth, this.noteHeight).move(position*this.quarterNoteWidth+this.base, (127-pitch)*this.noteHeight).fill(this.noteColor);
         this.rawSVGElementToWrapper[rect.node.id] = rect;
         rect.noteId = this.noteCount;
         rect.selectize({rotationPoint: false, points:['r', 'l']}).resize();
         let text = this.svgRoot.text(this.svgYToPitchString(rect.y()))
             .font({size: 14})
-            .move(position*this.quarterNoteWidth + this.textDev, (127-pitch)*this.noteHeight)
+            .move(position*this.quarterNoteWidth + this.textDev +this.base, (127-pitch)*this.noteHeight)
             .style('pointer-events', 'none');
         this.attachHandlersOnElement(rect, this.svgRoot);
         this.notes[this.noteCount] = {
@@ -251,9 +250,9 @@ class PianoRoll {
             label: text
         }
         this.noteCount++;
-        if(!avoidHistoryManipulation){
-            this.snapshotNoteState();
-        }
+        // if(!avoidHistoryManipulation){
+        this.snapshotNoteState();
+        // }
 
         this.playHandler(pitch);
 
@@ -532,7 +531,7 @@ class PianoRoll {
     }
 
     snapshotNoteState(){
-        console.log('snapshot', this.historyList.length, this.historyListIndex);
+        // console.log('snapshot', this.historyList.length, this.historyListIndex);
         let noteState = Object.values(this.notes).map(note => Object.assign({}, note.info));
         if(this.historyListIndex == this.historyList.length-1){
             this.historyList.push(noteState);
@@ -716,10 +715,10 @@ class PianoRoll {
             elem.on('mousedown', (event)=>{
                 let quantRound = (val, qVal) => Math.round(val/qVal) * qVal;
                 let mouseXY = this.svgMouseCoord(event);
-                let posSVG = quantRound(mouseXY.x, this.quarterNoteWidth/4);
-                this.cursorElement.x(posSVG-this.cursorWidth/2);
-                this.cursorPosition = posSVG/this.quarterNoteWidth;
-                // console.log('mousedown background', posSym, posSVG, event);
+                let posSVG = quantRound(mouseXY.x-this.base, this.quarterNoteWidth/4);
+
+                this.cursorPosition = (posSVG)/this.quarterNoteWidth;
+                this.cursorElement.x(posSVG - this.cursorWidth + this.base);
                 this.startDragSelection();
             });
 
@@ -945,5 +944,13 @@ class PianoRoll {
 
     clearNoteSelection(){
         this.selectedElements.forEach(noteElem => this.deselectNote(noteElem));
+    }
+
+    clearAllNotes(){
+        Object.values(this.notes).forEach(note => {
+            // this.selectNotes(noteElem)
+            this.deleteElement(note.elem); 
+            delete this.notes[note.elem.noteId];
+        })
     }
 }

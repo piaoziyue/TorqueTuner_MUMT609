@@ -1,0 +1,130 @@
+body {
+  font-family: helvetica;
+  margin: 0;
+  overflow: hidden;
+}
+
+.toolbar {
+  background-color: #67aaee;
+  position: absolute;
+  top: 0;
+  height: 50px;
+  left: 0;
+  right: 0;
+}
+.toolbar .button {
+  background-color: #fafafa;
+  display: inline-block;
+  width: 100px;
+  font-size: 12px;
+  color: #444444;
+  text-decoration: none;
+  text-align: center;
+  border: 2px solid #444444;
+  cursor: pointer;
+  border-radius: 5px;
+  height: 20px;
+  padding-top: 4px;
+  margin: 10px;
+}
+
+.dz-preview {
+  display: none;
+}
+
+.keys {
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  list-style-type: none;
+  position: absolute;
+  top: 70px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0;
+  margin: 0;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+.keys li {
+  border-top: 1px solid #444444;
+  position: relative;
+}
+.keys li:last-child {
+  border-bottom: 1px solid #444444;
+}
+.keys li .key {
+  position: relative;
+  z-index: 1;
+  height: 20px;
+  display: inline-block;
+  border-right: 1px solid #444444;
+  border-left: 1px solid #444444;
+  width: 60px;
+  text-align: right;
+  padding: 2px;
+  background-color: #fafafa;
+  color: #444444;
+}
+.keys li .key.sharp {
+  background-color: #444444;
+  color: #fafafa;
+}
+.keys li .key.active, .keys li .key.sharp.active {
+  background-color: #5298DE;
+}
+.keys li .notes {
+  display: inline-block;
+  position: absolute;
+}
+.keys li .notes .note {
+  position: absolute;
+  background-color: #5298DE;
+  height: 20px;
+  margin-top: 2px;
+  border-radius: 3px;
+}
+.svg_select_points_lt{
+  cursor: nw-resize;
+}
+.svg_select_points_rt{
+  cursor: ne-resize;
+}
+.svg_select_points_rb{
+  cursor: se-resize;
+}
+.svg_select_points_lb{
+  cursor: sw-resize;
+}
+.svg_select_points_t{
+  cursor: n-resize;
+}
+.svg_select_points_r{
+  cursor: e-resize;
+}
+.svg_select_points_b{
+  cursor: s-resize;
+}
+.svg_select_points_l{
+  cursor: w-resize;
+}
+
+.svg_select_points_rot{
+  stroke-width:1;
+  stroke:black;
+  fill: #F9FFED;
+}
+
+.svg_select_points_point{
+  cursor: move;
+}
+
+.svg_select_boundingRect{
+  stroke-width:1;
+  fill:gray;
+  stroke-dasharray:10 10;
+  stroke:black;
+  stroke-opacity:0.8;
+  fill-opacity:0.1;
+  pointer-events:none; /* This ons is needed if you want to deselect or drag the shape*/
+}
