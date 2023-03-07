@@ -2,7 +2,9 @@
 <html class="app-html">
 
 <head>
-    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>GrooveTuner</title>
     <link rel='stylesheet' href='lib/style.css'>
     <script type="text/javascript" src="lib/svg.js"></script>
@@ -34,6 +36,11 @@
     <script src='lib/MIDI/DOMLoader.XMLHttp.js'></script>
     <script src="lib/MIDI/Base64.js" type="text/javascript"></script>
     <script src="lib/MIDI/base64binary.js" type="text/javascript"></script>
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/p5.js"></script>
+    <script language="javascript" type="text/javascript" src="https://cdn.jsdelivr.net/npm/p5.serialserver@0.0.28/lib/p5.serialport.js"></script>
+
+   
 </head>
 
 <body>
@@ -43,11 +50,8 @@
     <div class='toolbar'>
         <div class='button' id='midi-upload'>Upload</div>
         <div class='button' id='midi-clear'>Clear</div>
-        <!-- <div class='content' id="midi-info"></div> -->
-        
+        <!-- <button onclick=port_list() id='port-list'>Port List</button> -->
     </div>
-    
-    <script src='js/sequencer.js'></script>
 
     <div data-role = 'header'>
         <center>
@@ -55,49 +59,37 @@
             <div id="drawing"></div>
         </center>
     </div>
+
+    <script type="text/javascript" src='js/sequencer.js'></script>
     
+    <script type="text/javascript" src="js/sketch.js"></script>
+
+    <!-- <a href="#">Velocity</a> -->
+
+    <!-- <section>
+        <nav>
+          <ul>
+            <!-- <li><a href="#">Velocity</a></li>
+            <li><a href="#">Rhythm</a></li> -->
+            <!-- <li><a href="#">Tokyo</a></li> -->
+          </ul>
+        </nav>
+        <article>
+            <!-- <script>
+                // This is the sketch launcher
+                var p5Sketch = new p5(sketch);
+                function runSketch(sketch) {
+                    if (typeof p5Sketch !== 'undefined') {
+                        p5Sketch.remove();
+                    }
+        
+                    p5Sketch = new p5(sketch, "sketchContainer");
+                }
+            </script> -->
+        <!-- </article> -->
+    <!-- </section> --> 
     
 
-    
-
-    <!-- <script src='js/midifile.js'></script>
-    <ul>
-    <li>
-        Note: this is currently only working with laptop trackpads - normal mouse behavior will be weird (to be fixed
-        soon)
-    </li>
-    <li>
-        Double click on an empty cell to add a note.
-    </li>
-    <li>
-        Click and drag a note to move it.
-    </li>
-    <li>
-        Click and drag the ends of a note to resize it.
-    </li>
-    <li>
-        Hold down Ctrl and move your mouse to scroll.
-    </li>
-    <li>
-        Hold down Alt and move your mouse to zoom.
-    </li>
-    <li>
-        Click and drag to highlight a selection. You can then drag/resize groups of notes. You can also hold down shift
-        and click to add notes to a group selection.
-    </li>
-    <li>
-        Hit backspace/delete to delete notes.
-    </li>
-    <li>
-        Hit Cmd-z/Cmd+Shift+z to undo/redo note editing actions.
-    </li>
-    <li>
-        Press the arrow keys to move selected notes.
-    </li>
-    <li>
-        Use Cmd-c/Cmd-v to copy/paste note selections. Selections will be pasted at the vertical cursor position.
-    </li>
-    </ul> -->
 </body>
 
 </html>

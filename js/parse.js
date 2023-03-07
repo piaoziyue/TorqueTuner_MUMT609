@@ -34,7 +34,7 @@ class Line {
 }
 
 // Holds all of the information needed to draw and play a midi file
-export class MidiData {
+class MidiData {
     constructor(midiBin, offset) {
         this.midi = new Midi(midiBin);
         this.cleanMidi = new Midi();

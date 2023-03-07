@@ -10,6 +10,7 @@ var allEvents = [];
 var pxPerMillis = 0;
 var millisPerTick = 0;
 var endTime = 0;
+var numNotes = 0;
 
 for(var pitch=108; pitch>=21; pitch--) { // A0 to C8
   var note = noteFromMidiPitch(pitch);
@@ -34,7 +35,6 @@ function drawSong() {
   song.tracks.forEach(function(track) {
     var time = 0;
     track.forEach(function(event) {
-      console.log("event", event)
       time += parseInt(event.deltaTime*millisPerTick);
       if(event.subtype === 'noteOn') {
         var pitch = event.noteNumber;
@@ -45,16 +45,17 @@ function drawSong() {
         var channel = event.channel;
         var startTime = openNotes[pitch];
         var deltaTime = event.deltaTime;
+        var velocity = event.velocity;
         openNotes[pitch] = null;
         var newNote = {
           pitch: pitch,
           startTime: startTime,
           deltaTime: deltaTime,
-          channel: channel
+          channel: channel,
+          velocity: velocity
         };
+        numNotes += 1;
 
-        // let notes = midiRoll.notes;
-        // console.log(pitch, "event", event,"duration", event.length, "velocity", event.velocity)
         pianoRoll.addNote(pitch, startTime/millisPerTick/480, event.deltaTime/480, true);
         allNotes.push(newNote);
 
@@ -83,6 +84,9 @@ function drawSong() {
     var noteHtml = '<div class="note" style="'+noteStyle+'"></div>';
     $('.keys li[pitch="'+note.pitch+'"] .notes').append(noteHtml);
   });
+
+  
+
   allEvents = allEvents.sort(function(a, b) {
     if(a.time === b.time) {
       if(a.subtype === 'noteOff') {
@@ -181,7 +185,7 @@ function uploadMidiFile(file) {
       drawSong(song);
       updateDownloadLink();
       document.getElementById("midi-info").innerHTML = file.name;
-      console.log(file)
+      
     };
     reader.readAsBinaryString(file);
   }
@@ -191,7 +195,7 @@ function updateDownloadLink() {
   var midi = midiConverter.jsonToMidi(song);
   var blob = new Blob([stringToArrayBuffer(midi)], {type:'audio/midi'});
   if(window.webkitURL) window.URL = window.webkitURL;
-  url = window.URL.createObjectURL(blob);
+  var url = window.URL.createObjectURL(blob);
   $('#midi-download').attr('href', url);
 }
 

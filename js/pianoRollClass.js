@@ -123,7 +123,7 @@ class PianoRoll {
         this.thickLineWidth = 1.8;
         this.thinLineWidth = 1;
         this.viewportHeight = 360;
-        this.viewportWidth = 1200;
+        this.viewportWidth = 1216;
         this.maxZoom;
         this.noteCount = 0;
         // Create an SVGPoint for future math
@@ -221,6 +221,10 @@ class PianoRoll {
             let strokeWidth = xPos % this.quarterNoteWidth == 0 ? this.thickLineWidth : this.thinLineWidth;
             let line = this.svgRoot.line(xPos + this.base, 0, xPos + this.base, this.pianoRollHeight).stroke({width: strokeWidth});
             this.backgroundElements.add(line);
+            
+            // let plotline = p.line(xPos + this.base, 100, xPos + this.base + this.quarterNoteWidth/4, 50).stroke({width: strokeWidth});
+            // this.backgroundElements.add(plotline);
+
         }
         for(let i = 1; i < this.NUM_MIDI_NOTES; i++){
             let line = this.svgRoot.line(0 + this.base, i*this.noteHeight, this.pianoRollWidth + this.base, i*this.noteHeight).stroke({width: this.thinLineWidth});
