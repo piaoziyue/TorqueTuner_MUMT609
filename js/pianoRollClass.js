@@ -105,7 +105,7 @@ class PianoRoll {
         this.noteSubDivision = 16; //where to draw lines and snap to grid
         this.timeSignature = 4/4; //b
         this.numMeasures = 100;
-        this.base = 0; //the piano roll panel starting xpos
+        this.base = 30; //the piano roll panel starting xpos
 
         // Every quarter note region of the background will be alternately colored.
         // In ableton this changes on zoom level - TODO - is this even used? Could ignore this behavior
@@ -123,7 +123,7 @@ class PianoRoll {
         this.thickLineWidth = 1.8;
         this.thinLineWidth = 1;
         this.viewportHeight = 360;
-        this.viewportWidth = 1216;
+        this.viewportWidth = 1248;
         this.maxZoom;
         this.noteCount = 0;
         // Create an SVGPoint for future math
