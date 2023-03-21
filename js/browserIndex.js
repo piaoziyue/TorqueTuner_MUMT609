@@ -83,11 +83,11 @@ function playPianoRoll(pianoRoll){
             // pianoRoll.playHandler.velocity = noteVelo;
         }
         durThisNote = Math.round(value.dur*2)/2;
-        console.log('part note', noteVelo, value.pitch, value.dur);
+        console.log('part note', value.pitch, noteVelo);
         sumVeloDel = 0;
         numVeloDel = 0;
-        
-        pianoRoll.playHandler(value.pitch, value.dur, noteVelo) //and velocity once that's in the piano roll
+        if (veloInputOrNot) pianoRoll.playHandler(value.pitch, value.dur, noteVelo); //and velocity once that's in the piano roll
+        else pianoRoll.playHandler(value.pitch, value.dur, 0.5);
         preInd = value.info.ind;
 
         if(value.info.numNotes == value.info.ind+1) {
@@ -108,8 +108,9 @@ function playPianoRoll(pianoRoll){
         sumVeloDel += velDelta;
         numVeloDel += 1;
         // console.log("end loop", sumVeloDel/numVeloDel);
-        pianoRoll.playHandler.velocity = sumVeloDel/numVeloDel/200;
-        console.log("here",pianoRoll.playHandler.velocity);
+        if (veloInputOrNot) pianoRoll.playHandler.velocity = sumVeloDel/numVeloDel/200;
+        else pianoRoll.playHandler.velocity =0.5;
+        
     }, "16n").start();
 
     // console.log("loop", sumVeloDel/numVeloDel, sumVeloDel, numVeloDel);
@@ -157,5 +158,4 @@ WORKING BUG LOG
 
 
 */
-
 

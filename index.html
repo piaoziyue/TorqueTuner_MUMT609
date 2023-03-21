@@ -63,7 +63,18 @@
 
     <script type="text/javascript" src='js/sequencer.js'></script>
     <script type="text/javascript" src="js/sketch.js"></script>
+
+    <div class="btn-group">
+        <button id = "veloInput">Velocity Input</button>
+        <button id = "veloOutput">Velocity Output</button> 
+        <button>Velocity Mixing</button>
+    </div>
     
+    <script>
+        document.getElementById("veloInput").onclick = function() {veloInputOrNot = true;console.log("click veloInput");};
+        
+        document.getElementById("veloOutput").onclick = function() {veloInputOrNot = false;console.log("click veloOutput");};  
+    </script>
 
 </body>
 
