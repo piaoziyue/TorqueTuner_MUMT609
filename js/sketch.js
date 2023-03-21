@@ -131,6 +131,6 @@ function gotData() {
         lastVelocity=velocity;
         velocity = currentString;
         append(veloDeltaList, velDelta)
-        console.log(velDelta)
+        // console.log(velDelta)
     }
 }

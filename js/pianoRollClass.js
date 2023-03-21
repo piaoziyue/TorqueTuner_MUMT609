@@ -91,7 +91,7 @@ class PianoRoll {
         this.selectRect; //the variable holding the mouse-region highlight svg rectabgle 
 
         this.cursorElement; //cursor that corresponds to interaction and editing
-        this.cursorPosition = 0.25; //cursor position is in beats
+        this.cursorPosition = 0; //cursor position is in beats
         this.cursorWidth = 2.1; 
 
         this.playCursorElement; //cursor that moves when piano roll is being played
@@ -250,7 +250,7 @@ class PianoRoll {
         this.attachHandlersOnElement(rect, this.svgRoot);
         this.notes[this.noteCount] = {
             elem: rect, 
-            info: {pitch, position, duration},
+            info: {pitch, position, duration, velocity},
             label: text
         }
         this.noteCount++;
@@ -284,7 +284,8 @@ class PianoRoll {
             let pitch = this.svgYtoPitch(note.elem.y());
             let position = this.svgXtoPosition(note.elem.x());
             let duration = note.elem.width()/this.quarterNoteWidth;
-            note.info = {pitch, position, duration};
+            let velocity = noteVelo;
+            note.info = {pitch, position, duration, velocity};
         } else {
             this.deleteElement(note.elem);
             delete this.notes[note.elem.noteId];
@@ -449,7 +450,8 @@ class PianoRoll {
             let noteInfo = this.svgXYtoPitchPosQuant(this.mousePosition.x, this.mousePosition.y);
             let keyNum = parseFloat(event.code[5]);
             let dur = 2**(keyNum-1) * (this.shiftKeyDown ? 2 : 1) * 0.25;
-            this.addNote(noteInfo.pitch, noteInfo.position, dur);
+            let velo = 0.5;
+            this.addNote(noteInfo.pitch, noteInfo.position, dur, velo);
         }
         if(event.key == 'q'){ 
             this.getNotesAtPosition(this.cursorPosition+0.01).map(n => this.playHandler(n.info.pitch));
@@ -563,7 +565,7 @@ class PianoRoll {
         this.notes = {};
         let noteState = this.historyList[histIndex];
         noteState.forEach((noteInfo)=>{
-            this.addNote(noteInfo.pitch, noteInfo.position, noteInfo.duration, true);
+            this.addNote(noteInfo.pitch, noteInfo.position, noteInfo.duration, noteInfo.velocity/127, true);
         });
     }
 

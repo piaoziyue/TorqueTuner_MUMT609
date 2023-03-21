@@ -43,17 +43,28 @@ function pianoRollToToneEvents(pianoRoll){
 let playCursorLoop;
 let pianoRollIsPlaying = false;
 let playingPart;
+var durThisNote;
+var durLoop;
+var sumVeloDel = 0;
+var numVeloDel = 0;
+var noteVelo;
+
 function playPianoRoll(pianoRoll){
     let toneEvents = pianoRollToToneEvents(pianoRoll);
 
     let playTime = toneEvents.slice(-1)[0].time + toneEvents.slice(-1)[0].dur;
     let playStartPos = pianoRoll.cursorPosition * pianoRoll.quarterNoteWidth;
     let playScreenDist = playTime * getBPM() / 60 * pianoRoll.quarterNoteWidth;
+    let bpm = getBPM();
+    var preInd = 0;
     
     pianoRoll.playCursorElement.opacity(1);
 
     playCursorLoop = animitter(function(deltaTime, elapsedTime, frameCount){
         if(elapsedTime/1000 >= playTime){
+            noteVelo=sumVeloDel/numVeloDel/180;
+            console.log(noteVelo);
+
             pianoRoll.playCursorElement.opacity(0);
             this.complete();
             console.log("finished playing", elapsedTime/1000, playTime);
@@ -62,12 +73,39 @@ function playPianoRoll(pianoRoll){
         pianoRoll.playCursorElement.x(playStartPos + playFrac*playScreenDist);
     }).start();
 
+
     playingPart = new Tone.Part((time, value) => {
-        console.log('part note', time, value);
-        pianoRoll.playHandler(value.pitch, value.dur) //and velocity once that's in the piano roll
-        if(value.info.numNotes == value.info.ind+1) pianoRollIsPlaying = false;
+
+        if(value.info.ind != 0) {
+            noteVelo=sumVeloDel/numVeloDel/180;
+            console.log(noteVelo);
+        }
+        durThisNote = Math.round(value.dur*2)/2;
+        console.log('part note', value, durThisNote);
+        sumVeloDel = 0;
+        numVeloDel = 0;
+        
+        pianoRoll.playHandler(value.pitch, value.dur, noteVelo) //and velocity once that's in the piano roll
+        preInd = value.info.ind;
+
+        if(value.info.numNotes == value.info.ind+1) {
+            pianoRollIsPlaying = false;
+            preInd = -1;
+        }
     }, toneEvents).start();
     pianoRollIsPlaying = true;
+    
+    
+    const loop = new Tone.Loop((time) => {
+        // console.log("begin loop", sumVeloDel, numVeloDel);
+        // triggered every eighth note.
+        sumVeloDel += velDelta;
+        numVeloDel += 1;
+        // console.log("end loop", sumVeloDel/numVeloDel);
+    }, "16n").start();
+
+    // console.log("loop", sumVeloDel/numVeloDel, sumVeloDel, numVeloDel);
+    
 }
 
 function stopPianoRoll(pianoRoll){
@@ -87,7 +125,7 @@ StartAudioContext(Tone.context, 'body', () => {
     Tone.Transport.start();
 });
 SVG.on(document, 'DOMContentLoaded', function() {
-    let playHandler = function(pitch, duration='16n'){
+    let playHandler = function(pitch, duration='16n', velocity=0.5){
         //if duration is "on" then just do noteOn, if its "off" just do note off
         let pitchString = typeof pitch === 'string' ? pitch : this.midiPitchToPitchString(pitch);
         synth.triggerAttackRelease(pitchString, duration);
