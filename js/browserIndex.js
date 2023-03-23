@@ -105,7 +105,7 @@ function playPianoRoll(pianoRoll){
             sumVeloDel=0;
             numVeloDel=0;
         }
-        sumVeloDel += velDelta;
+        sumVeloDel += torDelta;
         numVeloDel += 1;
         // console.log("end loop", sumVeloDel/numVeloDel);
         if (veloInputOrNot) pianoRoll.playHandler.velocity = sumVeloDel/numVeloDel/200;

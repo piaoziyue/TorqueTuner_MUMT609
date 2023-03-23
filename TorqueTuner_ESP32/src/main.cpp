@@ -679,10 +679,11 @@ void loop() {
   }
   #endif
 
-  if(Serial.available() > 0){
-    Serial.print(knob.torque); 
-    // Serial.print(",");
-    delay(100);
-  }
+  Serial.print(knob.torque); 
+  // Serial.print(",");
+  delay(100);
+  // if(Serial.available() > 0){
+    
+  // }
 
 }

@@ -50,7 +50,7 @@
     <div class='toolbar'>
         <div class='button' id='midi-upload'>Upload</div>
         <div class='button' id='midi-clear'>Clear</div>
-        <!-- <button onclick=port_list() id='port-list'>Port List</button> -->
+        <button id="connect" onClick="connect()">Connect</button>
     </div>
 
     <div data-role = 'header'>
@@ -63,11 +63,12 @@
 
     <script type="text/javascript" src='js/sequencer.js'></script>
     <script type="text/javascript" src="js/sketch.js"></script>
+    <script type="text/javascript" src="js/serial.js"></script>
 
     <div class="btn-group">
         <button id = "veloInput">Velocity Input</button>
         <button id = "veloOutput">Velocity Output</button> 
-        <button>Velocity Mixing</button>
+        <button id = "pitchBend">Pitch Bend</button>
     </div>
     
     <script>

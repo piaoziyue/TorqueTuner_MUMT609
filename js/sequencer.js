@@ -11,6 +11,7 @@ var pxPerMillis = 0;
 var millisPerTick = 0;
 var endTime = 0;
 var numNotes = 0;
+var velocity = 0.5;
 
 for(var pitch=108; pitch>=21; pitch--) { // A0 to C8
   var note = noteFromMidiPitch(pitch);

@@ -1,24 +1,7 @@
 
-let serial; // variable to hold an instance of the serialport library
-let portName = '/dev/tty.usbserial-020D14BA';
-let inData; // for incoming serial data
-var velocityList = [];
-var veloDeltaList = [];
-var velocity=0;
-var lastVelocity=0;
-var velDelta=0;
-var startTwist = false;
-var veloInputOrNot=false;
 
 function setup() {
     createCanvas(1500, 200);
-
-    serial = new p5.SerialPort();
-    serial.list();
-    serial.open('/dev/tty.usbserial-020D14BA');
-    serial.on('connected', serverConnected);
-   //  serial.on('list', gotList);
-    serial.on('data', gotData);
 
 }
 
@@ -85,53 +68,3 @@ function draw() {
     // }
 }
 
-
-function serverConnected() {
-    print("Connected to Server");
-}
-
-function gotList(thelist) {
-    print("List of Serial Ports:");
-    for (let i = 0; i < thelist.length; i++) {  
-        console.log(i + " " + thelist[i]);
-    }
-}
-
-function gotOpen() {
-    print("Serial Port is Open");
-}
-
-function gotClose(){
-    print("Serial Port is Closed");
-    latestData = "Serial Port is Closed";
-}
-
-function gotError(theerror) {
-    print(theerror);
-}
-
-function encode_utf8(s) {
-    return unescape(encodeURIComponent(s));
-}
-  
-function decode_utf8(s) {
-    return decodeURIComponent(escape(s));
-}
-
-function gotData() {
-    let n=' '
-    let currentString =  serial.read();
-    if (!currentString) return;
-
-    // if(currentString != '229') console.log(currentString)
-    
-    if (currentString != velocity){ //} && currentString != '229'){
-        startTwist = true;
-        append(velocityList, currentString)
-        velDelta = Math.abs(currentString-lastVelocity);
-        lastVelocity=velocity;
-        velocity = currentString;
-        append(veloDeltaList, velDelta)
-        // console.log(velDelta)
-    }
-}

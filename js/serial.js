@@ -1,3 +1,12 @@
+let inData; // for incoming serial data
+var torqueList = [];
+var torDeltaList = [];
+var torque=0;
+var lastTorque=0;
+var torDelta=0;
+var startTwist = false;
+var veloInputOrNot=false;
+
 // if ('serial' in navigator) {
 //     const notSupported = document.getElementById('notSupported');
 //     notSupported.classList.add('hidden');
@@ -58,7 +67,11 @@ async function readLoop() {
 
     while (true) {
         const { value, done } = await reader.read();
-        console.log('value', value);
+        // console.log('value', value);
+
+        torDelta = Math.abs(value-lastTorque);
+        lastTorque=value;
+        console.log('torDelta', torDelta);
         // console.log('done', done);
 
         // if (done) {
@@ -68,3 +81,18 @@ async function readLoop() {
         // }
     }
 }
+
+// function gotData() {
+
+//     // if(currentString != '229') console.log(currentString)
+    
+//     if (currentString != velocity){ //} && currentString != '229'){
+//         startTwist = true;
+//         append(velocityList, currentString)
+//         velDelta = Math.abs(currentString-lastVelocity);
+//         lastVelocity=velocity;
+//         velocity = currentString;
+//         append(veloDeltaList, velDelta)
+//         // console.log(velDelta)
+//     }
+// }
