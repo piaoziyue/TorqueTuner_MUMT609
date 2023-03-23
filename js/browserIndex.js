@@ -48,6 +48,8 @@ var durLoop;
 var sumVeloDel = 0;
 var numVeloDel = 0;
 var noteVelo;
+var prePitch;
+var preDur;
 
 function playPianoRoll(pianoRoll){
     let toneEvents = pianoRollToToneEvents(pianoRoll);
@@ -77,15 +79,15 @@ function playPianoRoll(pianoRoll){
     playingPart = new Tone.Part((time, value) => {
 
         if(value.info.ind != 0) {
-            noteVelo=sumVeloDel/numVeloDel/180;
-            console.log(noteVelo);
+            noteVelo=sumVeloDel/numVeloDel/200;
+            // pianoRoll.playHandler.velocity = noteVelo;
         }
         durThisNote = Math.round(value.dur*2)/2;
-        console.log('part note', value, durThisNote);
+        console.log('part note', value.pitch, noteVelo);
         sumVeloDel = 0;
         numVeloDel = 0;
-        
-        pianoRoll.playHandler(value.pitch, value.dur, noteVelo) //and velocity once that's in the piano roll
+        if (veloInputOrNot) pianoRoll.playHandler(value.pitch, value.dur, noteVelo); //and velocity once that's in the piano roll
+        else pianoRoll.playHandler(value.pitch, value.dur, 0.5);
         preInd = value.info.ind;
 
         if(value.info.numNotes == value.info.ind+1) {
@@ -99,9 +101,16 @@ function playPianoRoll(pianoRoll){
     const loop = new Tone.Loop((time) => {
         // console.log("begin loop", sumVeloDel, numVeloDel);
         // triggered every eighth note.
+        if(numVeloDel>=5){
+            sumVeloDel=0;
+            numVeloDel=0;
+        }
         sumVeloDel += velDelta;
         numVeloDel += 1;
         // console.log("end loop", sumVeloDel/numVeloDel);
+        if (veloInputOrNot) pianoRoll.playHandler.velocity = sumVeloDel/numVeloDel/200;
+        else pianoRoll.playHandler.velocity =0.5;
+        
     }, "16n").start();
 
     // console.log("loop", sumVeloDel/numVeloDel, sumVeloDel, numVeloDel);
@@ -125,10 +134,12 @@ StartAudioContext(Tone.context, 'body', () => {
     Tone.Transport.start();
 });
 SVG.on(document, 'DOMContentLoaded', function() {
-    let playHandler = function(pitch, duration='16n', velocity=0.5){
+    let playHandler = function(pitch, duration='16n', velocity=1){
         //if duration is "on" then just do noteOn, if its "off" just do note off
         let pitchString = typeof pitch === 'string' ? pitch : this.midiPitchToPitchString(pitch);
-        synth.triggerAttackRelease(pitchString, duration);
+        const now = Tone.now()
+        synth.triggerAttackRelease(pitchString, duration, now, velocity);
+
     }
     let onOffHanlder = function(pitch, onOff){
         let pitchString = typeof pitch === 'string' ? pitch : this.midiPitchToPitchString(pitch);
@@ -147,5 +158,4 @@ WORKING BUG LOG
 
 
 */
-
 

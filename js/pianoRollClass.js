@@ -238,7 +238,7 @@ class PianoRoll {
 
 
     //duration is number of quarter notes, pitch is 0-indexed MIDI
-    addNote(pitch, position, duration, avoidHistoryManipulation){
+    addNote(pitch, position, duration, velo, avoidHistoryManipulation){
         let rect = this.svgRoot.rect(duration*this.quarterNoteWidth, this.noteHeight).move(position*this.quarterNoteWidth+this.base, (127-pitch)*this.noteHeight).fill(this.noteColor);
         this.rawSVGElementToWrapper[rect.node.id] = rect;
         rect.noteId = this.noteCount;
@@ -817,11 +817,14 @@ class PianoRoll {
         noteElement.on('point', (event)=>{ console.log('select', event)});
 
         noteElement.on('mousedown', (event)=>{
+            
             if(!this.mouseScrollActive && !this.mouseZoomActive) {
+                // console.log("click");
                 this.resetMouseMoveRoot(event);
                 this.dragTarget = this.rawSVGElementToWrapper[event.target.id];
                 this.initializeNoteModificationAction(this.dragTarget);
                 this.draggingActive = true;
+
                 svgParentObj.on('mousemove', (event)=>{
                     let svgXY = this.svgMouseCoord(event);
                     let xMove;

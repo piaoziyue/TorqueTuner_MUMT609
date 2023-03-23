@@ -3,7 +3,15 @@ body {
   margin: 0;
   overflow: scroll;
 }
-
+.btn-group button {
+  background-color: #b4ddff; /* Green background */
+  border: 1px solid rgb(128, 240, 255); /* Green border */
+  color: white; /* White text */
+  padding: 10px 24px; /* Some padding */
+  cursor: pointer; /* Pointer/hand icon */
+  width: 5%; /* Set a width if needed */
+  display: block; /* Make the buttons appear below each other */
+}
 .toolbar {
   background-color: #67aaee;
   position: absolute;
