@@ -323,7 +323,7 @@ void sendI2C(TorqueTuner * knob_) {
   memcpy(tx_data + 6, &knob_->active_mode->pid_mode, 1);
   checksum_tx = calcsum(tx_data, I2C_BUF_SIZE);
   memcpy(tx_data + I2C_BUF_SIZE , &checksum_tx, 2);
-  // printf("Torque %d Angle %d Velocity %f Target %f Mode %c\n",knob_->torque,knob_->angle,knob_->velocity,knob_->target_velocity,knob_->active_mode->pid_mode);
+  printf("Torque %d Angle %d Velocity %f Target %f Mode %c \n",knob_->torque,knob_->angle,knob_->velocity,knob_->target_velocity,knob_->active_mode->pid_mode);
   int n = Wire.write(tx_data, I2C_BUF_SIZE + CHECKSUMSIZE);
   Wire.endTransmission();    // stop transmitting
 }
@@ -689,8 +689,6 @@ void loop() {
   }
   #endif
 
-  // if(Serial.available() > 0){
-    
-  // }
+
 
 }

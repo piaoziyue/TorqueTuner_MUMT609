@@ -19,13 +19,13 @@ function draw() {
   let centerY = height / 2;
   
   // calculate the angle of the cursor based on the serial number
-  let angle_2pi = map(serialNumber, 0, 360, 0, TWO_PI);
+  let angle_2pi = map(serialNumber, 0, 3600, 0, TWO_PI);
   
   // calculate the x and y coordinates of the cursor based on the angle and ring radius
   let cursorX = centerX + cos(angle_2pi) * ringRadius;
   let cursorY = centerY + sin(angle_2pi) * ringRadius;
 
-  cursorRadius = 10+ abs(lastTorque/5);
+  // cursorRadius = 10+ abs(lastTorque/5);
   
   // draw the ring
   ellipse(centerX, centerY, ringRadius * 2);
@@ -34,5 +34,5 @@ function draw() {
   ellipse(cursorX, cursorY, cursorRadius * 2);
   
   // update the serial number every frame (this should be replaced with real-time data from the serial port)
-  serialNumber = angle/10;
+  serialNumber = angle%3600;
 }

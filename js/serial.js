@@ -67,8 +67,8 @@ async function readLoop() {
         
 
         for (i=0; i<value.length-1; i++){
-            if (splitArray[i] =="velocity") lastTorque = parseInt(splitArray[i+1]);
-            else if (splitArray[i] =="angle") angle = parseInt(splitArray[i+1]);
+            if (splitArray[i] =="Velocity") lastTorque = parseInt(splitArray[i+1]);
+            else if (splitArray[i] =="Angle") angle = parseInt(splitArray[i+1]);
         }
 
         console.log('value', parseInt(lastTorque), parseInt(angle)/10);

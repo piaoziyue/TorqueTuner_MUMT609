@@ -32,9 +32,6 @@ void TorqueTuner::update() {
 	} 
 	else {
 		torque = static_cast<int16_t>(active_mode->calc(this) - active_mode->damping * velocity);
-		// if(torque != 0) 
-		printf("velocity %d angle %d ", velocity, angle);
-		delay(100);
 	}
 };
 
