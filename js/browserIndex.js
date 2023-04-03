@@ -64,7 +64,7 @@ function playPianoRoll(pianoRoll){
 
     playCursorLoop = animitter(function(deltaTime, elapsedTime, frameCount){
         if(elapsedTime/1000 >= playTime){
-            noteVelo=sumVeloDel/numVeloDel/180;
+            noteVelo=sumVeloDel/numVeloDel/20;
             console.log(noteVelo);
 
             pianoRoll.playCursorElement.opacity(0);
@@ -75,19 +75,21 @@ function playPianoRoll(pianoRoll){
         pianoRoll.playCursorElement.x(playStartPos + playFrac*playScreenDist);
     }).start();
 
-
+    var pitchOfNote;
     playingPart = new Tone.Part((time, value) => {
 
         if(value.info.ind != 0) {
-            noteVelo=sumVeloDel/numVeloDel/200;
+            // noteVelo=sumVeloDel/numVeloDel/60;
             // pianoRoll.playHandler.velocity = noteVelo;
         }
         durThisNote = Math.round(value.dur*2)/2;
-        console.log('part note', value.pitch, noteVelo);
         sumVeloDel = 0;
         numVeloDel = 0;
+        pitchOfNote = value.pitch;
+
         if (veloInputOrNot) pianoRoll.playHandler(value.pitch, value.dur, noteVelo); //and velocity once that's in the piano roll
         else pianoRoll.playHandler(value.pitch, value.dur, 0.5);
+
         preInd = value.info.ind;
 
         if(value.info.numNotes == value.info.ind+1) {
@@ -101,20 +103,39 @@ function playPianoRoll(pianoRoll){
     const loop = new Tone.Loop((time) => {
         // console.log("begin loop", sumVeloDel, numVeloDel);
         // triggered every eighth note.
+
+        writeToStream("c")
+
         if(numVeloDel>=5){
             sumVeloDel=0;
             numVeloDel=0;
         }
-        sumVeloDel += torDelta;
+        sumVeloDel += lastTorque;
         numVeloDel += 1;
+        let pitchMidi = pitchStringToMidiPitch(pitchOfNote);
         // console.log("end loop", sumVeloDel/numVeloDel);
-        if (veloInputOrNot) pianoRoll.playHandler.velocity = sumVeloDel/numVeloDel/200;
-        else pianoRoll.playHandler.velocity =0.5;
+        let midiChanges = Math.floor(lastTorque/2 )/2;//Math.floor(sumVeloDel/numVeloDel/5)/4;
+        let newPitchMidi = midiChanges+pitchMidi;
+        let newPitch = midiPitchToPitchString(newPitchMidi);
+
+        console.log("pitch change", pitchOfNote, midiChanges, newPitchMidi, newPitch)
+
+        if(pitchBendOrNot){
+            // let newPitch = 
+            synth.setNote(newPitchMidi);
+        }
         
     }, "16n").start();
-
-    // console.log("loop", sumVeloDel/numVeloDel, sumVeloDel, numVeloDel);
     
+}
+function pitchStringToMidiPitch(pitch){ 
+    let midi = (parseInt(pitch.slice(-1))+2)*12 + pianoRoll.pitchStrings.indexOf(pitch.slice(0, -1));
+    return parseInt(midi)
+}
+
+function midiPitchToPitchString(pitch){ 
+    let pitchString = pianoRoll.pitchStrings[pitch%12] + (Math.floor(pitch/12)-2);
+    return pitchString
 }
 
 function stopPianoRoll(pianoRoll){
@@ -128,19 +149,26 @@ function stopPianoRoll(pianoRoll){
 }
 
 let pianoRoll;
-let synth = new Tone.PolySynth(8).toMaster();
+let synth = new Tone.Synth().toDestination();
 
 StartAudioContext(Tone.context, 'body', () => {
     Tone.Transport.start();
 });
+
+var startNoteTime;
 SVG.on(document, 'DOMContentLoaded', function() {
-    let playHandler = function(pitch, duration='16n', velocity=1){
+    let playHandler = function(pitch_, duration_='16n', velocity_=1){
+        let pitch = pitch_;
+        let duration = duration_;
+        let velocity = velocity_;
         //if duration is "on" then just do noteOn, if its "off" just do note off
         let pitchString = typeof pitch === 'string' ? pitch : this.midiPitchToPitchString(pitch);
-        const now = Tone.now()
-        synth.triggerAttackRelease(pitchString, duration, now, velocity);
-
+        startNoteTime = Tone.now();
+        synth.triggerAttackRelease(pitchString, duration, startNoteTime, velocity);
+        // console.log("startNoteTime", startNoteTime)
     }
+
+
     let onOffHanlder = function(pitch, onOff){
         let pitchString = typeof pitch === 'string' ? pitch : this.midiPitchToPitchString(pitch);
         if(onOff == 'on'){

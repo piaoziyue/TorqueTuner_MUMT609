@@ -570,8 +570,10 @@ class PianoRoll {
     }
 
     midiPitchToPitchString(pitch){ 
-        return this.pitchStrings[pitch%12] + (Math.floor(pitch/12)-2)
+        let pitchString = this.pitchStrings[pitch%12] + (Math.floor(pitch/12)-2);
+        return pitchString
     }
+
 
     svgYToPitchString(yVal){
         let pitch = this.svgYtoPitch(yVal);
@@ -961,5 +963,19 @@ class PianoRoll {
             this.deleteElement(note.elem); 
             delete this.notes[note.elem.noteId];
         })
+    }
+
+
+    setPlayHandler (playHandler, pitchOrVelo, value){
+        let restartNoteTime = Tone.now()
+        if (pitchOrVelo == "pitch"){
+            let newPitch = playHandler.pitch + value;
+            let newPitchString = typeof newPitch === 'string' ? newPitch : this.midiPitchToPitchString(newPitch);
+            console.log("newPitch", newPitch, newPitchString, value);
+            synth.triggerAttackRelease(newPitchString, playHandler.duration-(restartNoteTime-startNoteTime), restartNoteTime, playHandler.velocity);
+            synth.setNote(newPitchString);
+        }else if(pitchOrVelo == "velocity"){
+            synth.triggerAttackRelease(playHandler.PitchString, playHandler.duration-(restartNoteTime-startNoteTime), restartNoteTime, value);
+        }
     }
 }

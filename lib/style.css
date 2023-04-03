@@ -136,3 +136,30 @@ body {
   fill-opacity:0.1;
   pointer-events:none; /* This ons is needed if you want to deselect or drag the shape*/
 }
+
+#container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+}
+
+button {
+  /* margin-top: 20px;
+  margin-left: 10px;
+  margin-right: 10px; */
+  /* padding: 10px 20px; */
+  text-align: center;
+  border: 2px solid #444444;
+  border-radius: 5px;
+  background-color: #fafafa;
+  color: #444444;
+  font-size: 12px;
+  cursor: pointer;
+  width: 100px;
+
+  height: 27px;
+  /* padding-top: 4px; */
+  margin: 10px;
+}

@@ -33,7 +33,8 @@ void TorqueTuner::update() {
 	else {
 		torque = static_cast<int16_t>(active_mode->calc(this) - active_mode->damping * velocity);
 		// if(torque != 0) 
-		// printf("%d", torque);
+		printf("velocity %d angle %d ", velocity, angle);
+		delay(100);
 	}
 };
 
@@ -439,9 +440,3 @@ void Mode::reset(int16_t angle_) {
 	idx = offset; // apply mode specific offset to idx
 	state = 0;
 };
-
-
-
-
-
-// Hybrid mode - under construction

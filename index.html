@@ -11,14 +11,11 @@
     <script type="text/javascript" src="lib/svg.draw.js"></script>
     <script type="text/javascript" src="lib/svg.select.js"></script>
     <script type="text/javascript" src="lib/svg.resize.js"></script>
-    <!-- <script type="text/javascript" src="lib/osc.js"></script> -->
     <script type="text/javascript" src="lib/Tone.js"></script>
     <script type="text/javascript" src="lib/ToneMidi.js"></script>
     <script type="text/javascript" src="lib/StartAudioContext.js"></script>
     <script type="text/javascript" src="lib/animitter.js"></script>
     <script type="text/javascript" src="js/pianoRollClass.js"></script>
-    <!-- <script type="text/javascript" src="samp/samp.js"></script> -->
-    <!-- <script src="https://unpkg.com/tone"></script> -->
     <script type="text/javascript" src="js/parse.js"></script>
     <script type="text/javascript" src="js/browserIndex.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/webmidi@latest/dist/iife/webmidi.iife.js"></script>
@@ -62,19 +59,35 @@
     </div>
 
     <script type="text/javascript" src='js/sequencer.js'></script>
-    <script type="text/javascript" src="js/sketch.js"></script>
     <script type="text/javascript" src="js/serial.js"></script>
-
-    <div class="btn-group">
-        <button id = "veloInput">Velocity Input</button>
-        <button id = "veloOutput">Velocity Output</button> 
-        <button id = "pitchBend">Pitch Bend</button>
-    </div>
+    <script type="text/javascript" src="js/sketch.js"></script>
+    <div id="container">
+        <div id="button-container">
+            <button id = "veloInput">Velocity Input</button>
+            <button id = "veloOutput">Velocity Output</button> 
+            <button id = "pitchBend">Pitch Bend</button>
+        </div>
+      </div>
     
     <script>
-        document.getElementById("veloInput").onclick = function() {veloInputOrNot = true;console.log("click veloInput");};
+        document.getElementById("veloInput").onclick = function() {
+            veloInputOrNot = true;
+            pitchBendOrNot = false;
+            console.log("click veloInput");
+        };
         
-        document.getElementById("veloOutput").onclick = function() {veloInputOrNot = false;console.log("click veloOutput");};  
+        document.getElementById("veloOutput").onclick = function() {
+            veloInputOrNot = false;
+            pitchBendOrNot = false;
+            console.log("click veloOutput");
+        }; 
+
+        document.getElementById("pitchBend").onclick = function() {
+            pitchBendOrNot = true;
+            veloInputOrNot = false;
+            console.log("click pitchBend");
+        }; 
+
     </script>
 
 </body>

@@ -2,10 +2,12 @@ let inData; // for incoming serial data
 var torqueList = [];
 var torDeltaList = [];
 var torque=0;
+var angle =0;
 var lastTorque=0;
 var torDelta=0;
 var startTwist = false;
 var veloInputOrNot=false;
+var pitchBendOrNot=false;
 
 // if ('serial' in navigator) {
 //     const notSupported = document.getElementById('notSupported');
@@ -15,17 +17,9 @@ var veloInputOrNot=false;
 // const log = document.getElementById("log")
 
 
-// function send() {
-//     const toSend = document.getElementById("input").value
-//     writeToStream(toSend)
-//     document.getElementById("input").value = ""
-
-// }
-
 function handle(e) {
     if (e.keyCode === 13) {
         e.preventDefault();
-        send();
     }
 }
 
@@ -58,7 +52,7 @@ async function connect() {
 function writeToStream(line) {
     const writer = outputStream.getWriter();
     console.log('[SEND]', line);
-    writer.write(line + '\r');
+    writer.write(line);
     writer.releaseLock();
 }
 
@@ -67,11 +61,22 @@ async function readLoop() {
 
     while (true) {
         const { value, done } = await reader.read();
-        // console.log('value', value);
+        console.log(value)
 
-        torDelta = Math.abs(value-lastTorque);
-        lastTorque=value;
-        console.log('torDelta', torDelta);
+        let splitArray = value.split(" ");
+        
+
+        for (i=0; i<value.length-1; i++){
+            if (splitArray[i] =="velocity") lastTorque = parseInt(splitArray[i+1]);
+            else if (splitArray[i] =="angle") angle = parseInt(splitArray[i+1]);
+        }
+
+        console.log('value', parseInt(lastTorque), parseInt(angle)/10);
+
+        // torDelta = value-lastTorque;
+        // lastTorque=value;
+        if(Math.abs(lastTorque)<=4) lastTorque=0;
+        // console.log('tor', lastTorque);
         // console.log('done', done);
 
         // if (done) {

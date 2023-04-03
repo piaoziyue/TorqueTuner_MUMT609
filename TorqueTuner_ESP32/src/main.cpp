@@ -65,7 +65,7 @@ const int SCL_PIN = 22;
 #endif
 
 // Motor properties
-int STATE = 0;
+int STATE = 6;
 int OLD_VALUE = 9999;
 int OLD_STATE = 4;
 int MAX_MOTOR_STATES = 9;
@@ -421,9 +421,9 @@ void setup() {
   Serial.begin(115200);
   #ifdef LIBMAPPER
   connected = init_wifi(SSID, PASSWORD, 30000);
-  lcd.clear();
-  lcd.setCursor(0,0);
-  lcd.print("Connected to Wifi");
+  // lcd.clear();
+  // lcd.setCursor(0,0);
+  // lcd.print("Connected to Wifi");
   
   // if (connected) {
   init_mpr_sigs();
@@ -447,8 +447,8 @@ void setup() {
   // Make a reading for initilization
   int err = 1;
   #ifdef VISUAL_FEEDBACK
-  lcd.clear();
-  lcd.print("Waiting for I2C");
+  // lcd.clear();
+  // lcd.print("Waiting for I2C");
   #endif
   while (err) {
     err = receiveI2C(&knob);
@@ -475,6 +475,16 @@ void setup() {
 void loop() {
 
   now = micros();
+
+  if (Serial.available() > 0) {
+    String inputString = Serial.readString(); // Read the string from the serial port
+    // Serial.println("Received: " + inputString); // Print the received string to the serial monitor
+    lcd.printf("Received: %s", inputString);
+    if(inputString == "c"){
+      knob.set_mode(0); //set mode to click
+      delay(300);
+    }
+  }
 
   // Update libmapper connections
   #ifdef LIBMAPPER
@@ -679,9 +689,6 @@ void loop() {
   }
   #endif
 
-  Serial.print(knob.torque); 
-  // Serial.print(",");
-  delay(100);
   // if(Serial.available() > 0){
     
   // }
