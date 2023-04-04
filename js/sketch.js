@@ -5,10 +5,11 @@ let cursorRadius = 10; // radius of the cursor
 
 function setup() {
     var canvas = createCanvas(400, 400);
-    canvas.parent('container');
+    canvas.parent('sketch-container');
 //   createCanvas(400, 400);
     stroke(150); // set stroke color to white
     noFill(); // set fill color to transparent
+    
 }
 
 function draw() {
@@ -25,13 +26,18 @@ function draw() {
   let cursorX = centerX + cos(angle_2pi) * ringRadius;
   let cursorY = centerY + sin(angle_2pi) * ringRadius;
 
-  // cursorRadius = 10+ abs(lastTorque/5);
-  
+  cursorRadius = 10+ abs(velocity/5);
   // draw the ring
+  noFill();
   ellipse(centerX, centerY, ringRadius * 2);
   
+
   // draw the cursor
+  fill(150);
   ellipse(cursorX, cursorY, cursorRadius * 2);
+
+  // d
+  noFill();
   
   // update the serial number every frame (this should be replaced with real-time data from the serial port)
   serialNumber = angle%3600;

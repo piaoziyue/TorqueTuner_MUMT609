@@ -1,21 +1,23 @@
 let inData; // for incoming serial data
 var torqueList = [];
 var torDeltaList = [];
-var torque=0;
-var angle =0;
-var lastTorque=0;
-var torDelta=0;
+var velocity=0;
+var velocityOut = 0;
+var angle = 0;
+var angleOut = 0;
+var torque = 0;
+var mode;
+var mode_string;
+
 var startTwist = false;
 var veloInputOrNot=false;
-var pitchBendOrNot=false;
+var pitchBendOrNot=true;
 
-// if ('serial' in navigator) {
-//     const notSupported = document.getElementById('notSupported');
-//     notSupported.classList.add('hidden');
-// }
+var lastTorque=0;
+var lastVelocity=0;
+var lastAngle =0;
 
-// const log = document.getElementById("log")
-
+var thisMode = 'f';
 
 function handle(e) {
     if (e.keyCode === 13) {
@@ -47,6 +49,47 @@ async function connect() {
 
     reader = inputStream.getReader();
     readLoop();
+
+    document.getElementById("haps1").addEventListener("click", function() {
+        // update date the mode to wallet
+        thisMode = 'w';
+        console.log("clickmode", thisMode);
+        writeToStream(thisMode);
+      });
+    document.getElementById("haps2").addEventListener("click", function() {
+        // update date the mode to click
+        thisMode = 'c';
+        console.log("clickmode", thisMode);
+        writeToStream(thisMode);
+      });
+      document.getElementById("haps3").addEventListener("click", function() {
+       // update date the mode to free spring
+        thisMode = 'f';
+        console.log("clickmode", thisMode);
+        writeToStream(thisMode);
+      });
+      document.getElementById("hapd1").addEventListener("click", function() {
+        // update date the mode to linear spring
+        thisMode = 'l';
+        console.log("clickmode", thisMode);
+        writeToStream(thisMode);
+      });
+      document.getElementById("hapd2").addEventListener("click", function() {
+        // update date the mode to exp spring
+        thisMode = 'e';
+        console.log("clickmode", thisMode);
+        writeToStream(thisMode);
+      });
+      document.getElementById("hapd3").addEventListener("click", function() {
+        // update date the mode to magnet
+        thisMode = 'm';
+        console.log("clickmode", thisMode);
+        writeToStream(thisMode);
+      });
+      document.getElementById("hapc1").addEventListener("click", function() {
+        // change the value of A1
+        // thisMode = 'w';
+      });
 }
 
 function writeToStream(line) {
@@ -64,40 +107,55 @@ async function readLoop() {
         console.log(value)
 
         let splitArray = value.split(" ");
-        
 
         for (i=0; i<value.length-1; i++){
-            if (splitArray[i] =="Velocity") lastTorque = parseInt(splitArray[i+1]);
-            else if (splitArray[i] =="Angle") angle = parseInt(splitArray[i+1]);
+            if (splitArray[i] == "Velocity") {
+                velocity = parseInt(splitArray[i+1]);
+                    
+            }
+            else if (splitArray[i] =="Angle") {
+                angle = parseInt(splitArray[i+1]);
+                if((angle<90 && (isNaN(lastAngle) || lastAngle>90)) || isNaN(angle)) {
+                    angle = lastAngle;
+                    // console.log('value', parseInt(angle)/10, parseInt(lastAngle)/10);
+                    lastAngle = lastAngle;
+                }else {
+                    // console.log('value', parseInt(angle)/10, parseInt(lastAngle)/10);
+                    lastAngle = angle;
+                }
+                    
+            }
+            else if (splitArray[i] =="Torque") {
+                torque = parseInt(splitArray[i+1]);
+            }
+            else if (splitArray[i] =="AngleOut"){
+                angleOut = parseInt(splitArray[i+1]);
+            }
+            else if (splitArray[i] =="VelocityOut"){
+                velocityOut = parseInt(splitArray[i+1]);
+            }
+            else if (splitArray[i] =="Mode"){
+                mode = splitArray[i+1];
+                if(mode == 'w') mode_string="wall";
+                else if(mode == 'c') mode_string="click";
+                else if(mode == 'm') mode_string="magnet";
+                else if(mode == 'i') mode_string="inertia";
+                else if(mode == 'e') mode_string="exp spring";
+                else if(mode == 'l') mode_string="liner spring";
+                else if(mode == 'f') mode_string="free";
+                else if(mode == 's') mode_string="spin";
+                document.getElementById("mode").innerHTML = mode_string;
+                
+
+            }
+            
+  
+        
         }
+        setTimeout(function(){
+        }, 500); 
+        console.log("log", torque, angle, angleOut, velocity, velocityOut, mode);
+        if(splitArray[i+1] != NaN) console.log("check", splitArray[i+1]);
 
-        console.log('value', parseInt(lastTorque), parseInt(angle)/10);
-
-        // torDelta = value-lastTorque;
-        // lastTorque=value;
-        if(Math.abs(lastTorque)<=4) lastTorque=0;
-        // console.log('tor', lastTorque);
-        // console.log('done', done);
-
-        // if (done) {
-        //     console.log('[readLoop] DONE', done);
-        //     reader.releaseLock();
-        //     break;
-        // }
     }
 }
-
-// function gotData() {
-
-//     // if(currentString != '229') console.log(currentString)
-    
-//     if (currentString != velocity){ //} && currentString != '229'){
-//         startTwist = true;
-//         append(velocityList, currentString)
-//         velDelta = Math.abs(currentString-lastVelocity);
-//         lastVelocity=velocity;
-//         velocity = currentString;
-//         append(veloDeltaList, velDelta)
-//         // console.log(velDelta)
-//     }
-// }

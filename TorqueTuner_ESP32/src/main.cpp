@@ -323,7 +323,7 @@ void sendI2C(TorqueTuner * knob_) {
   memcpy(tx_data + 6, &knob_->active_mode->pid_mode, 1);
   checksum_tx = calcsum(tx_data, I2C_BUF_SIZE);
   memcpy(tx_data + I2C_BUF_SIZE , &checksum_tx, 2);
-  printf("Torque %d Angle %d Velocity %f Target %f Mode %c \n",knob_->torque,knob_->angle,knob_->velocity,knob_->target_velocity,knob_->active_mode->pid_mode);
+  printf("Torque %d Angle %d AngleOut %d Velocity %f VelocityOut %f Mode %c \n",knob_->torque,knob_->angle,knob_->velocity,knob_->velocity_out,knob_->active_mode->name);
   int n = Wire.write(tx_data, I2C_BUF_SIZE + CHECKSUMSIZE);
   Wire.endTransmission();    // stop transmitting
 }
@@ -479,11 +479,21 @@ void loop() {
   if (Serial.available() > 0) {
     String inputString = Serial.readString(); // Read the string from the serial port
     // Serial.println("Received: " + inputString); // Print the received string to the serial monitor
+    lcd.clear();
+    lcd.setCursor(0, 1);
     lcd.printf("Received: %s", inputString);
-    if(inputString == "c"){
-      knob.set_mode(0); //set mode to click
-      delay(300);
-    }
+    int changedMode;
+    if(inputString == "c") changedMode = 0;
+    else if(inputString == "m") changedMode = 1;
+    else if(inputString == "w") changedMode = 2;
+    else if(inputString == "i") changedMode = 3;
+    else if(inputString == "l") changedMode = 4;
+    else if(inputString == "e") changedMode = 5;
+    else if(inputString == "f") changedMode = 6;
+    // else if(inputString == "c") changedMode = 0;
+
+    knob.set_mode(changedMode); //set mode to click
+    delay(50);
   }
 
   // Update libmapper connections

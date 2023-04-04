@@ -137,12 +137,26 @@ body {
   pointer-events:none; /* This ons is needed if you want to deselect or drag the shape*/
 }
 
-#container {
+#btn_container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  height: 60vh;
+}
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Style the left part */
+.left-part {
+  flex: 1;
+}
+
+/* Style the right part */
+.right-part {
+  flex: 3;
 }
 
 button {
@@ -162,4 +176,91 @@ button {
   height: 27px;
   /* padding-top: 4px; */
   margin: 10px;
+}
+
+/* Style the dropdown button
+.dropbtn {
+  text-align: center;
+  border: 2px solid #444444;
+  border-radius: 5px;
+  background-color: #fafafa;
+  color: #444444;
+  font-size: 12px;
+  cursor: pointer;
+  width: 100px;
+
+  height: 27px;
+  /* padding-top: 4px; 
+  margin: 10px;
+}
+
+/* Style the dropdown content 
+.dropdown-content {
+  display: none;
+  position: absolute;
+  flex-direction: column;
+  z-index: 1;
+}
+
+/* Show the dropdown content when the dropdown button is clicked 
+.dropdown:hover .dropdown-content {  
+  position: relative;
+  display: inline-block;
+} */
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropbtn {
+  text-align: center;
+  border: 2px solid #444444;
+  border-radius: 5px;
+  background-color: #fafafa;
+  color: #444444;
+  font-size: 12px;
+  cursor: pointer;
+  width: 100px;
+
+  height: 27px;
+  margin: 10px;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+
+
+  font-size: 12px;
+  z-index: 1;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.dropdown-content .column {
+  float: left;
+  width: 33.33%;
+  padding: 10px;
+  height: 120px;
+}
+
+.dropdown-content .column a {
+  display: block;
+  color: black;
+  padding: 5px;
+  text-decoration: none;
+}
+
+.dropdown-content .column a:hover {
+  background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropbtn {
+  background-color: #1594ba;
 }

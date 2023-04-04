@@ -60,12 +60,51 @@
 
     <script type="text/javascript" src='js/sequencer.js'></script>
     <script type="text/javascript" src="js/serial.js"></script>
-    <script type="text/javascript" src="js/sketch.js"></script>
-    <div id="container">
-        <div id="button-container">
-            <button id = "veloInput">Velocity Input</button>
-            <button id = "veloOutput">Velocity Output</button> 
-            <button id = "pitchBend">Pitch Bend</button>
+    <script src="js/sketch.js"></script>
+
+    <div class="container">
+        <div class="left-part">
+            
+            <div id="btn_container">
+                <p id="mode">the mode of the TorqueTuner</p>
+                <div class="dropdown">
+                    <button class="dropbtn">Haptic Mode</button>
+                    <div class="dropdown-content">
+                      <div class="column">
+                        <h3>Static haptic</h3>
+                        <a href="#" id="haps1">Free</a>
+                        <a href="#" id="haps2">Click</a>
+                        <a href="#" id="haps3">Static</a>
+                      </div>
+                      <div class="column">
+                        <h3>Dynamic haptic</h3>
+                        <a href="#" id="hapd1">LinSpring</a>
+                        <a href="#" id="hapd2">ExpSpring</a>
+                        <a href="#" id="hapd3">Magnet</a>
+                      </div>
+                      <div class="column">
+                        <h3>Combination</h3>
+                        <a href="#" id="hapc1">Link 7</a>
+                        <a href="#" id="hapc2">Link 8</a>
+                        <a href="#" id="hapc3">Link 9</a>
+                      </div>
+                    </div>
+                </div>
+                <button id = "pitchBend">Pitch Bend</button>
+                <button id = "veloInput">Velocity</button>
+                <!-- <div class="dropdown">
+                    <button class="dropbtn">Dropdown</button>
+                    <div class="dropdown-content">
+                      <a href="#">Option 1</a>
+                      <a href="#">Option 2</a>
+                      <a href="#">Option 3</a>
+                    </div>
+                </div> -->
+            </div>
+            
+        </div>
+        <div class="right-part">
+            <div id="sketch-container"></div>
         </div>
       </div>
     
@@ -75,12 +114,6 @@
             pitchBendOrNot = false;
             console.log("click veloInput");
         };
-        
-        document.getElementById("veloOutput").onclick = function() {
-            veloInputOrNot = false;
-            pitchBendOrNot = false;
-            console.log("click veloOutput");
-        }; 
 
         document.getElementById("pitchBend").onclick = function() {
             pitchBendOrNot = true;

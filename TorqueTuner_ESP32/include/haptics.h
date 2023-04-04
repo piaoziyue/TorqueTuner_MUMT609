@@ -38,8 +38,10 @@ public:
     bool wrap_output = false;
     bool wrap_haptics = false;
     char pid_mode = 't';
+    char name = 'f';
     int idx = 0;
     int state = 0;
+    
 
 };
 
@@ -49,6 +51,7 @@ public:
     Wall() : Mode(MAX_TORQUE/2) {
         damping = 0.4;
         max = 3000;
+        name = 'w';
     }
     int16_t calc(void* ptr);
     float stiffness = 0.1;
@@ -64,6 +67,7 @@ public:
         damping = 0.2;
         #endif
         offset = 1799;
+        name = 'c';
         wrap_output = true;
         wrap_haptics = true;
     }
@@ -75,6 +79,7 @@ class Magnet: public Mode
 public:
     Magnet() : Mode() {
         damping = 0.08;
+        name = 'm';
     }
     int16_t calc(void* ptr);
 };
@@ -82,8 +87,11 @@ public:
 class Inertia: public Mode
 {
 public:
-    Inertia() : Mode(MAX_TORQUE) {}
+    Inertia() : Mode(MAX_TORQUE) {
+        name = 'i';
+    }
     int16_t calc(void* ptr);
+    
 };
 
 class ExpSpring: public Mode
@@ -91,6 +99,7 @@ class ExpSpring: public Mode
 public:
     ExpSpring() : Mode(180, 1, 0, 3600, 0.1) {
         stretch_default  = 5;
+        name = 'e';
     }
     int16_t calc(void* ptr);
 };
@@ -101,6 +110,7 @@ public:
     LinSpring() : Mode(MAX_TORQUE, 1, 0, 3600) {
         wrap_output = true;
         wrap_haptics = false;
+        name = 'l';
     }
     int16_t calc(void* ptr);
 };
@@ -110,6 +120,7 @@ class Free: public Mode
 public:
     Free() : Mode(0, 1) {
         target_velocity_default = 0;
+        name = 'f';
     }
     int16_t calc(void* ptr);
 };
@@ -119,6 +130,7 @@ class Spin: public Mode
 public:
     Spin() : Mode(0, 1) {
         pid_mode = 'v';
+        name = 's';
         wrap_output = true;
         target_velocity_default = 200;
     }

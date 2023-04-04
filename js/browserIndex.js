@@ -1,6 +1,6 @@
 
 "use strict";
-
+var pitchOfNote;
 let getBPM = () =>  Tone.Transport.bpm.value;
 
 function pianoRollToToneEvents(pianoRoll){
@@ -75,16 +75,13 @@ function playPianoRoll(pianoRoll){
         pianoRoll.playCursorElement.x(playStartPos + playFrac*playScreenDist);
     }).start();
 
-    var pitchOfNote;
-    playingPart = new Tone.Part((time, value) => {
+    function mapValue(value, oldMin, oldMax, newMin, newMax) {
+        return (value - oldMin) * (newMax - newMin) / (oldMax - oldMin) + newMin;
+      }
 
-        if(value.info.ind != 0) {
-            // noteVelo=sumVeloDel/numVeloDel/60;
-            // pianoRoll.playHandler.velocity = noteVelo;
-        }
+    
+    playingPart = new Tone.Part((time, value) => {
         durThisNote = Math.round(value.dur*2)/2;
-        sumVeloDel = 0;
-        numVeloDel = 0;
         pitchOfNote = value.pitch;
 
         if (veloInputOrNot) pianoRoll.playHandler(value.pitch, value.dur, noteVelo); //and velocity once that's in the piano roll
@@ -104,26 +101,21 @@ function playPianoRoll(pianoRoll){
         // console.log("begin loop", sumVeloDel, numVeloDel);
         // triggered every eighth note.
 
-        writeToStream("c")
-
-        if(numVeloDel>=5){
-            sumVeloDel=0;
-            numVeloDel=0;
-        }
-        sumVeloDel += lastTorque;
-        numVeloDel += 1;
+        // writeToStream("c")
         let pitchMidi = pitchStringToMidiPitch(pitchOfNote);
-        // console.log("end loop", sumVeloDel/numVeloDel);
-        let midiChanges = Math.floor(lastTorque/2 )/2;//Math.floor(sumVeloDel/numVeloDel/5)/4;
-        let newPitchMidi = midiChanges+pitchMidi;
+        let midiChanges = mapValue(angle, 0, 3600, -6, 6);
+        let newPitchMidi = Math.floor(midiChanges+pitchMidi);
         let newPitch = midiPitchToPitchString(newPitchMidi);
 
-        console.log("pitch change", pitchOfNote, midiChanges, newPitchMidi, newPitch)
+        console.log("pitch change", pitchOfNote, midiChanges, pitchMidi, newPitchMidi) //, newPitch)
 
-        if(pitchBendOrNot){
-            // let newPitch = 
-            synth.setNote(newPitchMidi);
-        }
+        // let pitchShift = new Tone.PitchShift(midiChanges).toDestination();
+        synth.setNote(newPitch);
+        // synth.connect(pitchShift);
+        // if(pitchBendOrNot){
+        //     // let newPitch = 
+        //     synth.setNote(newPitch);
+        // }
         
     }, "16n").start();
     
