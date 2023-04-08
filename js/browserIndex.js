@@ -1,5 +1,8 @@
 
 "use strict";
+
+// const { Tone } = require("tone/build/esm/core/Tone");
+
 var pitchOfNote;
 let getBPM = () =>  Tone.Transport.bpm.value;
 
@@ -101,21 +104,16 @@ function playPianoRoll(pianoRoll){
         // console.log("begin loop", sumVeloDel, numVeloDel);
         // triggered every eighth note.
 
-        // writeToStream("c")
         let pitchMidi = pitchStringToMidiPitch(pitchOfNote);
         let midiChanges = mapValue(angle, 0, 3600, -6, 6);
-        let newPitchMidi = Math.floor(midiChanges+pitchMidi);
-        let newPitch = midiPitchToPitchString(newPitchMidi);
+        let newPitchMidi = midiChanges+pitchMidi; //Math.floor(midiChanges+pitchMidi);
+        // let newPitch = midiPitchToPitchString(newPitchMidi);
 
-        console.log("pitch change", pitchOfNote, midiChanges, pitchMidi, newPitchMidi) //, newPitch)
+        let newPitchTonefre = Tone.Frequency(newPitchMidi, "midi");
 
-        // let pitchShift = new Tone.PitchShift(midiChanges).toDestination();
-        synth.setNote(newPitch);
-        // synth.connect(pitchShift);
-        // if(pitchBendOrNot){
-        //     // let newPitch = 
-        //     synth.setNote(newPitch);
-        // }
+        // console.log("pitch change", pitchOfNote, midiChanges, pitchMidi, newPitchMidi);
+
+        synth.setNote(newPitchTonefre);
         
     }, "16n").start();
     
@@ -156,8 +154,9 @@ SVG.on(document, 'DOMContentLoaded', function() {
         //if duration is "on" then just do noteOn, if its "off" just do note off
         let pitchString = typeof pitch === 'string' ? pitch : this.midiPitchToPitchString(pitch);
         startNoteTime = Tone.now();
+        console.log("startNoteTime", startNoteTime, duration, startNoteTime)
         synth.triggerAttackRelease(pitchString, duration, startNoteTime, velocity);
-        // console.log("startNoteTime", startNoteTime)
+        
     }
 
 

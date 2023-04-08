@@ -24,8 +24,8 @@ function draw() {
   let angle_2pi = map(serialNumber, 0, 3600, 0, TWO_PI);
   
   // calculate the x and y coordinates of the cursor based on the angle and ring radius
-  let cursorX = centerX + cos(angle_2pi) * ringRadius;
-  let cursorY = centerY + sin(angle_2pi) * ringRadius;
+  let cursorX = centerX + sin(angle_2pi) * ringRadius;
+  let cursorY = centerY - cos(angle_2pi) * ringRadius;
 
   
   // draw the ring
@@ -36,20 +36,18 @@ function draw() {
   let textColor = 150;//map(torque, -100, 100, 10, 250);
   fill(textColor);
   textSize(15);
-  text('0', centerX+(ringRadius+cursorRadius)+15, centerY+5);
-  text('90', centerX-10, centerY-(ringRadius+cursorRadius)-10);
-  text('180', centerX-(ringRadius+cursorRadius)-45, centerY+5);
-  text('270', centerX-10, centerY+(ringRadius+cursorRadius)+25);
+  text('90', centerX+(ringRadius+cursorRadius)+15, centerY+5);
+  text('0', centerX-3, centerY-(ringRadius+cursorRadius)-10);
+  text('-90', centerX-(ringRadius+cursorRadius)-35, centerY+5);
+  text('180', centerX-10, centerY+(ringRadius+cursorRadius)+25);
   // draw the cursor
   noStroke();
   fill('rgb(82,150,230)');
   ellipse(cursorX, cursorY, cursorRadius * 2);
 
-  // d
   noFill();
   
   // update the serial number every frame (this should be replaced with real-time data from the serial port)
-  
   if(isNaN(angle)==false) serialNumber = angle%3600;
-  console.log("angle out1", angle)
+  // console.log("angle out1", angle)
 }
