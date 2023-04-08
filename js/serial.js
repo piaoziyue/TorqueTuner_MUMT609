@@ -68,6 +68,12 @@ async function connect() {
         console.log("clickmode", thisMode);
         writeToStream(thisMode);
       });
+      document.getElementById("haps4").addEventListener("click", function() {
+        // update date the mode to vibrate
+         thisMode = 'v';
+         console.log("clickmode", thisMode);
+         writeToStream(thisMode);
+       });
       document.getElementById("hapd1").addEventListener("click", function() {
         // update date the mode to linear spring
         thisMode = 'l';
@@ -104,39 +110,53 @@ async function readLoop() {
 
     while (true) {
         const { value, done } = await reader.read();
-        console.log(value)
+       
 
         let splitArray = value.split(" ");
+        console.log("split", splitArray)
 
         for (i=0; i<value.length-1; i++){
             if (splitArray[i] == "Velocity") {
-                velocity = parseInt(splitArray[i+1]);
-                    
+                if(isNaN(splitArray[i+1])==false) velocity = parseInt(splitArray[i+1]);
+                else velocity=0;
             }
             else if (splitArray[i] =="Angle") {
                 angle = parseInt(splitArray[i+1]);
-                if((angle<90 && (isNaN(lastAngle) || lastAngle>90)) || isNaN(angle)) {
-                    angle = lastAngle;
-                    // console.log('value', parseInt(angle)/10, parseInt(lastAngle)/10);
-                    lastAngle = lastAngle;
-                }else {
-                    // console.log('value', parseInt(angle)/10, parseInt(lastAngle)/10);
+                if(abs(angle-lastAngle)>20){
+                    if(isNaN(velocity))angle = lastAngle+2;
+                    else angle = lastAngle+velocity;
+                    // console.log('value1', parseInt(angle)/10, parseInt(lastAngle)/10);
+                    // lastAngle = parseInt(splitArray[i+1]);
+                }else{
                     lastAngle = angle;
+                    
+                    // console.log('value2', parseInt(angle)/10, parseInt(lastAngle)/10);
                 }
+                // if((angle<90 && (isNaN(lastAngle) || lastAngle>90)) || isNaN(angle)) {
+                //     angle = lastAngle;
+                //     // console.log('value', parseInt(angle)/10, parseInt(lastAngle)/10);
+                //     lastAngle = lastAngle;
+                // }else {
+                //     // console.log('value', parseInt(angle)/10, parseInt(lastAngle)/10);
+                //     lastAngle = angle;
+                // }
                     
             }
             else if (splitArray[i] =="Torque") {
-                torque = parseInt(splitArray[i+1]);
+                if(isNaN(splitArray[i+1])==false) torque = parseInt(splitArray[i+1]);
+                else torque=0;
             }
             else if (splitArray[i] =="AngleOut"){
-                angleOut = parseInt(splitArray[i+1]);
+                if(isNaN(splitArray[i+1])==false) angleOut = parseInt(splitArray[i+1]);
+                else angleOut=0;
             }
             else if (splitArray[i] =="VelocityOut"){
-                velocityOut = parseInt(splitArray[i+1]);
+                if(isNaN(splitArray[i+1])==false) velocityOut = parseInt(splitArray[i+1]);
+                else velocityOut=0;
             }
             else if (splitArray[i] =="Mode"){
                 mode = splitArray[i+1];
-                if(mode == 'w') mode_string="wall";
+                if(mode == 'w') mode_string="no resistance";
                 else if(mode == 'c') mode_string="click";
                 else if(mode == 'm') mode_string="magnet";
                 else if(mode == 'i') mode_string="inertia";
@@ -144,6 +164,7 @@ async function readLoop() {
                 else if(mode == 'l') mode_string="liner spring";
                 else if(mode == 'f') mode_string="free";
                 else if(mode == 's') mode_string="spin";
+                else if(mode == 'v') mode_string="vibrate";
                 document.getElementById("mode").innerHTML = mode_string;
                 
 
@@ -152,9 +173,9 @@ async function readLoop() {
   
         
         }
-        setTimeout(function(){
-        }, 500); 
-        console.log("log", torque, angle, angleOut, velocity, velocityOut, mode);
+        // setTimeout(function(){
+        // }, 200); 
+        // console.log("log", torque, angle, angleOut, velocity, velocityOut, mode);
         if(splitArray[i+1] != NaN) console.log("check", splitArray[i+1]);
 
     }

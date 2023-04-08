@@ -27,7 +27,7 @@ void TorqueTuner::update() {
 		update_trig();
 		angle_discrete_last = angle_discrete;
 	};
-	if (active_mode == &wall) {
+	if (active_mode == &noresist) {
 		torque = static_cast<int16_t>(active_mode->calc(this));
 	} 
 	else {
@@ -111,8 +111,8 @@ void TorqueTuner::print_mode(MODE mode_) {
 	case INERTIA:
 		printf("Inertia\n");
 		break;
-	case WALL:
-		printf("Wall\n");
+	case NORESIST:
+		printf("NORESIST\n");
 		break;
 	case MAGNET:
 		printf("Magnet\n");
@@ -128,6 +128,9 @@ void TorqueTuner::print_mode(MODE mode_) {
 		break;
 	case SPIN:
 		printf("Spin \n");
+		break;
+	case VIBRATE:
+		printf("Vibrate \n");
 		break;
 	}
 };
@@ -165,7 +168,13 @@ int32_t TorqueTuner::getTime() {
 	return esp_timer_get_time();
 }
 
-int16_t Wall::calc(void* ptr) {
+int16_t Noresist::calc(void* ptr) {
+	TorqueTuner* knob = (TorqueTuner*)ptr;
+	float val = 0;
+	return static_cast<int16_t> (round(val));
+};
+
+int16_t Vibrate::calc(void* ptr) {
 	TorqueTuner* knob = (TorqueTuner*)ptr;
 	float val = 0;
 	float delta_angle_min = (knob->angle_unclipped - min) / 10.0;
@@ -260,156 +269,6 @@ int16_t Mode::calc_index(void* ptr) {
 	return idx;
 
 };
-
-int16_t Teacher::calc(void* ptr) {
-	TorqueTuner* knob = (TorqueTuner*) ptr;
-	// printf("index %d angle %d\n",knob->t_angles_index,knob->relative_angle());
-	return knob->scale;
-};
-
-
-
-int16_t Student::calc(void* ptr) {
-	TorqueTuner* knob = (TorqueTuner*)ptr;
-	if (knob->demo_time_count == 0) knob->set_demo(true);
-	
-	if (!knob->timer_on && abs(knob->angle-knob->start_angle)>50) knob->timer_on = true; // only start counting time when enough movement happened
-
-	// find absolute target angle
-	int16_t relative_target = knob->t_angles[knob->t_angles_index];
-	int16_t absolute_target = mod(knob->start_angle + relative_target*10, 3600);
-
-	// should the resistance happen to the right or the left of the target?
-	int16_t previous_angle = 0;
-	if (knob->t_angles_index>0) previous_angle = knob->t_angles[knob->t_angles_index-1];
-	bool is_left = relative_target - previous_angle < 0;
-	int direction_modifier = is_left ? 1 : -1;
-
-	// unidirectional bounded linear spring, could be nonlinear 
-	int16_t torque = 0;
-	int16_t diff = 0;
-
-	// demostration settings
-	int angle_list[knob->t_angles_MAX_SIZE] = {0};
-	int angle_dir_list[knob->t_angles_MAX_SIZE] = {0}; 
-	int time_sum = 0;
-
-	// --------1. calculate the angle and its direction turning in ith demostration-----//
-	// angle_list[i] is the angle in ith demostration
-	// angle_dir_list[i] is the direction of the angle in ith demostration
-	// angle_list[0] and angle_dir_list[0] are always 0
-	
-	for (int i = 0; i<=knob->t_angles_MAX_SIZE; i++) {
-		if(i == 0) angle_list[i] = 0;
-		else if (i == 1) angle_list[i] = knob->t_angles[i-1];
-		else angle_list[i] = knob->t_angles[i-1] - knob->t_angles[i-2];
-
-		if (angle_list[i] < 0) angle_dir_list[i] = -1;
-		else if (angle_list[i] > 0) angle_dir_list[i] = 1;
-		else angle_dir_list[i] = 0;
-
-		angle_list[i] = abs(angle_list[i]);
-
-		time_sum += angle_list[i];
-	}
-	
-	// -------2. start the demostration----------//
-	if (knob->demo == true & knob->demo_time_count < time_sum+20) {
-		// reset the angle anagle, so the the relative angle is 0
-		if(knob->demo_time_count == 0) knob->start_angle = knob->angle;
-		
-		// printf("now angle %d\n",  knob->relative_angle());
-		// printf("demo: %d, time %d and sum%d\n",knob->demo_pointer, knob->demo_time_count, time_sum);
-		// printf("now angle %d, aim angle %d\n", knob->relative_angle(), angle_list[knob->demo_pointer]);
-		
-
-		// judge if it is pausing time or turning time
-		//----------------2.1 pausing time----------------//
-		if(knob->demo_pause == true || knob->demo_pointer == 0){
-		// 	if (knob->demo_pause_time < knob->demo_pause_time_sum) {
-		// 		knob->demo_pause_time++;
-		// 		torque = 0;
-		// 	} else {
-		// 		knob->demo_pause = false;
-		// 		knob->demo_pause_time = 0;
-		// 	}
-		// 	printf("pause? %d, demo pause time %d\n\n", knob->demo_pause, knob->demo_pause_time);
-		
-		}
-		//----------------2.2 turning time----------------//
-		else {
-			// the "knob->demo_pointer"th angle's demostration
-			if (knob->demo_time_count < angle_list[knob->demo_pointer] ||
-			knob->relative_angle() <= angle_list[knob->demo_pointer]) {
-
-				knob->demo_time_count += 1;
-				torque = angle_dir_list[knob->demo_pointer]  * 5;
-				// printf("initial torque: %d\n", torque);
-				
-			}
-			// trun into the next angle's demostration
-			else{
-				
-				if(knob->demo_pointer < knob->t_angles_MAX_SIZE) {
-					knob->demo_pointer += 1;
-					// knob->demo_pause = true;
-				}
-				knob->start_angle = knob->angle;
-			}
-
-		}
-		
-	} 
-	//---------------3. end the demostration and start student performance-----------------//
-	else  {
-		knob->set_demo(false);
-		if (knob->t_angles_index >= knob->t_angles_MAX_SIZE) {
-			knob->demo = false;
-			knob->demo_index = 0;
-			torque = 0;
-		}
-		torque = 0;
-		diff = mod(direction_modifier * (absolute_target-knob->angle),3600);
-
-		if (diff < knob->width && diff > 0){ // within resistance range
-			torque = direction_modifier * knob->max_torque * diff / knob->width;
-			knob->overshot_count += diff / 1000.0; 
-		}
-	}
-	
-
-	// printf("start %d | absolute target: %d | current: %d | diff: %d | torque: %d | index: %d | targets: %d %d %d | angles: %d %d %d\n",knob->start_angle,absolute_target,knob->angle,diff,torque,knob->t_angles_index,knob->t_angles[0],knob->t_angles[1],knob->t_angles[2],knob->performed_angles[0],knob->performed_angles[1],knob->performed_angles[2]);
-	// printf("overshot %f raw %f | time %f raw %f | precision %f raw %f | score %f ready %d\n",knob->overshot_score,knob->overshot_score/knob->overshot_weight,knob->time_score,knob->time_score/knob->time_weight,knob->precision_score,knob->precision_score/knob->precision_weight,knob->score,knob->score_ready);
-
-	if (knob->timer_on){
-		knob->time_count ++;
-		// printf("%d\n",knob->time_count);
-	} 
-	
-	return torque;
-}
-
-// bonus messing around function
-int16_t back_forth(void* ptr) {
-	TorqueTuner* knob = (TorqueTuner*)ptr;
-
-	int extremum = 5000;
-
-	if (knob->rising_index){
-		knob->t_angles_index -= 1;
-		if (knob->t_angles_index<=-extremum){
-			knob->rising_index = false;
-		}
-	}
-	else {
-		knob->t_angles_index += 1;
-		if (knob->t_angles_index>=extremum){
-			knob->rising_index = true;
-		}
-	}
-	
-	return knob->t_angles_index/100.0;
-}
 
 void TorqueTuner::reset_scores(){
 	overshot_score = 0;

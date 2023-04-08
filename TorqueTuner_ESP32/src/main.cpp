@@ -178,7 +178,7 @@ void print_state(int cur_state) {
     lcd.print("MAGNET");
   }
   else if (cur_state == 2) {
-    lcd.print("WALL");
+    lcd.print("NO RESISTANCE");
   }
   else if (cur_state == 3) {
     lcd.print("INERTIA");
@@ -195,17 +195,9 @@ void print_state(int cur_state) {
   else if (cur_state == 7) {
     lcd.print("SPIN");
   }
-  // else if (cur_state == 8) {
-  //   lcd.clear();
-  //   lcd.printf("TEACHER: %d/%d",knob.t_angles_index+1,knob.t_angles_MAX_SIZE);
-  //   lcd.setCursor(0,1);
-  //   lcd.printf("%3d %3d %3d",knob.t_angles[0],knob.t_angles[1],knob.t_angles[2]);
-  // }
-  // else if (cur_state == 9) {
-  //   lcd.clear();
-  //   lcd.printf("STUDENT: %d/%d",knob.t_angles_index+1,knob.t_angles_MAX_SIZE);
-  //   lcd.setCursor(0,1);
-  //   lcd.printf("%3d %3d %3d",knob.t_angles[0],knob.t_angles[1],knob.t_angles[2]);  }
+  else if (cur_state == 8) {
+    lcd.print("VIBRATE");
+  }
   else {
     lcd.print("Unknown State");
   }
@@ -309,8 +301,6 @@ int receiveI2C(TorqueTuner * knob_) {
       memcpy(&knob_->angle, rx_data + 1, 2);
       #endif
       memcpy(&knob_->velocity, rx_data + 4, 4);
-      // printf("Angle %d Velocity %f\n",knob_->angle,knob_->velocity );
-      // printf("%d",knob_->torque);
       return 0; //Return 0 if no error has occured
     }
   }
@@ -323,6 +313,7 @@ void sendI2C(TorqueTuner * knob_) {
   memcpy(tx_data + 6, &knob_->active_mode->pid_mode, 1);
   checksum_tx = calcsum(tx_data, I2C_BUF_SIZE);
   memcpy(tx_data + I2C_BUF_SIZE , &checksum_tx, 2);
+  // printf("angle_clip %d \n", knob_->angle_unclipped);
   printf("Torque %d Angle %d AngleOut %d Velocity %f VelocityOut %f Mode %c \n",knob_->torque,knob_->angle,knob_->velocity,knob_->velocity_out,knob_->active_mode->name);
   int n = Wire.write(tx_data, I2C_BUF_SIZE + CHECKSUMSIZE);
   Wire.endTransmission();    // stop transmitting
@@ -490,8 +481,13 @@ void loop() {
     else if(inputString == "l") changedMode = 4;
     else if(inputString == "e") changedMode = 5;
     else if(inputString == "f") changedMode = 6;
+    else if(inputString == "s") changedMode = 7;
+    else if(inputString == "v") changedMode = 8;
+    else if(inputString == "u") knob.update_angle();
     // else if(inputString == "c") changedMode = 0;
-
+    lcd.clear();
+    lcd.setCursor(0, 1);
+    print_state(changedMode);
     knob.set_mode(changedMode); //set mode to click
     delay(50);
   }

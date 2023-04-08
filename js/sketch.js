@@ -2,9 +2,10 @@
 let serialNumber = 0; // initialize serial number
 let ringRadius = 150; // radius of the ring
 let cursorRadius = 10; // radius of the cursor
+var startAngle = 0;
 
 function setup() {
-    var canvas = createCanvas(400, 400);
+    var canvas = createCanvas(410, 400);
     canvas.parent('sketch-container');
 //   createCanvas(400, 400);
     stroke(150); // set stroke color to white
@@ -14,7 +15,7 @@ function setup() {
 
 function draw() {
   background(255); // set background color to black
-  
+  stroke(150);
   // calculate the x and y coordinates of the center of the canvas
   let centerX = width / 2;
   let centerY = height / 2;
@@ -26,19 +27,29 @@ function draw() {
   let cursorX = centerX + cos(angle_2pi) * ringRadius;
   let cursorY = centerY + sin(angle_2pi) * ringRadius;
 
-  cursorRadius = 10+ abs(velocity/5);
+  
   // draw the ring
   noFill();
-  ellipse(centerX, centerY, ringRadius * 2);
-  
+  ellipse(centerX, centerY, (ringRadius-cursorRadius-3) * 2);
+  ellipse(centerX, centerY, (ringRadius+cursorRadius+3) * 2);
 
+  let textColor = 150;//map(torque, -100, 100, 10, 250);
+  fill(textColor);
+  textSize(15);
+  text('0', centerX+(ringRadius+cursorRadius)+15, centerY+5);
+  text('90', centerX-10, centerY-(ringRadius+cursorRadius)-10);
+  text('180', centerX-(ringRadius+cursorRadius)-45, centerY+5);
+  text('270', centerX-10, centerY+(ringRadius+cursorRadius)+25);
   // draw the cursor
-  fill(150);
+  noStroke();
+  fill('rgb(82,150,230)');
   ellipse(cursorX, cursorY, cursorRadius * 2);
 
   // d
   noFill();
   
   // update the serial number every frame (this should be replaced with real-time data from the serial port)
-  serialNumber = angle%3600;
+  
+  if(isNaN(angle)==false) serialNumber = angle%3600;
+  console.log("angle out1", angle)
 }

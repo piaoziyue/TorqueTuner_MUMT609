@@ -45,13 +45,22 @@ public:
 
 };
 
-class Wall: public Mode
+class Noresist: public Mode
 {
 public:
-    Wall() : Mode(MAX_TORQUE/2) {
-        damping = 0.4;
-        max = 3000;
+    Noresist() : Mode(MAX_TORQUE/2) {
         name = 'w';
+    }
+    int16_t calc(void* ptr);
+};
+
+class Vibrate: public Mode
+{
+public:
+    Vibrate() : Mode(MAX_TORQUE/2) {
+        damping = 0.4;
+        max = 3700;
+        name = 'v';
     }
     int16_t calc(void* ptr);
     float stiffness = 0.1;
@@ -137,39 +146,19 @@ public:
     int16_t calc(void* ptr);
 };
 
-class Teacher: public Mode
-{
-public:
-    Teacher() : Mode(0,1) {
-        target_velocity_default = 0;
-    }
-    int16_t calc(void* ptr);
-};
-
-class Student: public Mode
-{
-public:
-    Student() : Mode(75,1) {
-        target_velocity_default = 0;
-    }
-    int16_t calc(void* ptr);
-};
-
-
 class TorqueTuner
 {
 public:
     enum MODE {
         CLICK = 0,
         MAGNET = 1,
-        WALL = 2,
+        NORESIST = 2,
         INERTIA = 3,
         LINSPRING = 4,
         EXPSPRING = 5,
         FREE = 6,
         SPIN = 7,
-        TEACHER = 8,
-        STUDENT = 9
+        VIBRATE = 8
     };
     const int trigger_interval = 50000;  // 10 ms
 
@@ -194,7 +183,7 @@ public:
     void compute_scores();
     int16_t relative_angle();
 
-    MODE mode = WALL;
+    MODE mode = NORESIST;
     
     int t_angles_MAX_SIZE = 3;
     // angles are relative to starting position (knob.start_angle) cf Student::calc
@@ -250,15 +239,14 @@ public:
 
     Click click;
     Magnet magnet;
-    Wall wall;
+    Noresist noresist;
     LinSpring lin_spring;
     ExpSpring exp_spring;
     Free free;
     Inertia inertia;
     Spin spin;
-    Teacher teacher;
-    Student student;
-    std::vector<Mode * > mode_list = {&click, &magnet, &wall, &inertia, &lin_spring, &exp_spring,  &free, &spin, &teacher, &student};
+    Vibrate vibrate;
+    std::vector<Mode * > mode_list = {&click, &magnet, &noresist, &inertia, &lin_spring, &exp_spring,  &free, &spin, &vibrate};
     Mode * active_mode;
 
 private:
