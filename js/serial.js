@@ -16,6 +16,8 @@ var pitchBendOrNot=true;
 var lastTorque=0;
 var lastVelocity=0;
 var lastAngle =0;
+var zeroAngle = 0;
+var firstInTheLoop = true;
 
 var thisMode = 'f';
 
@@ -49,53 +51,7 @@ async function connect() {
 
     reader = inputStream.getReader();
     readLoop();
-
-    document.getElementById("haps1").addEventListener("click", function() {
-        // update date the mode to wallet
-        thisMode = 'w';
-        console.log("clickmode", thisMode);
-        writeToStream(thisMode);
-      });
-    document.getElementById("haps2").addEventListener("click", function() {
-        // update date the mode to click
-        thisMode = 'c';
-        console.log("clickmode", thisMode);
-        writeToStream(thisMode);
-      });
-      document.getElementById("haps3").addEventListener("click", function() {
-       // update date the mode to free spring
-        thisMode = 'f';
-        console.log("clickmode", thisMode);
-        writeToStream(thisMode);
-      });
-      document.getElementById("haps4").addEventListener("click", function() {
-        // update date the mode to vibrate
-         thisMode = 'v';
-         console.log("clickmode", thisMode);
-         writeToStream(thisMode);
-       });
-      document.getElementById("hapd1").addEventListener("click", function() {
-        // update date the mode to linear spring
-        thisMode = 'l';
-        console.log("clickmode", thisMode);
-        writeToStream(thisMode);
-      });
-      document.getElementById("hapd2").addEventListener("click", function() {
-        // update date the mode to exp spring
-        thisMode = 'e';
-        console.log("clickmode", thisMode);
-        writeToStream(thisMode);
-      });
-      document.getElementById("hapd3").addEventListener("click", function() {
-        // update date the mode to magnet
-        thisMode = 'm';
-        console.log("clickmode", thisMode);
-        writeToStream(thisMode);
-      });
-      document.getElementById("hapc1").addEventListener("click", function() {
-        // change the value of A1
-        // thisMode = 'w';
-      });
+    
 }
 
 function writeToStream(line) {
@@ -107,12 +63,12 @@ function writeToStream(line) {
 
 async function readLoop() {
     console.log('Readloop');
-
+    
     while (true) {
+        
         const { value, done } = await reader.read();
-       
 
-        let splitArray = value.split(" ");
+        let splitArray = value.split(",");
         console.log("split", splitArray)
 
         for (i=0; i<value.length-1; i++){
@@ -121,25 +77,25 @@ async function readLoop() {
                 else velocity=0;
             }
             else if (splitArray[i] =="Angle") {
-                angle = parseInt(splitArray[i+1]);
-                if(abs(angle-lastAngle)>20){
-                    if(isNaN(velocity))angle = lastAngle+2;
-                    else angle = lastAngle+velocity;
-                    // console.log('value1', parseInt(angle)/10, parseInt(lastAngle)/10);
-                    // lastAngle = parseInt(splitArray[i+1]);
-                }else{
-                    lastAngle = angle;
-                    
-                    // console.log('value2', parseInt(angle)/10, parseInt(lastAngle)/10);
+                // console.log("log1", Math.floor(lastAngle/10), Math.floor(lastAngle/100), Math.floor(lastAngle/1000))
+                if(isNaN(splitArray[i+1])==false 
+                  && (splitArray[i+1]>Math.floor(lastAngle/10)+10 || splitArray[i+1]<Math.floor(lastAngle/10)-10)
+                  && (splitArray[i+1]>Math.floor(lastAngle/100)+10 || splitArray[i+1]<Math.floor(lastAngle/100)-10)
+                  && (splitArray[i+1]>Math.floor(lastAngle/1000)+10 || splitArray[i+1]<Math.floor(lastAngle/1000)-10) ) 
+                    angle = parseInt(splitArray[i+1]);
+                else angle=lastAngle;
+                setTimeout(function(){
+                        }, 200);
+                lastAngle = angle;
+                
+                console.log("log", firstInTheLoop);
+                if(firstInTheLoop){
+                    console.log("here");
+                    setTimeout(function(){
+                    }, 200);
+                    zeroAngle = angle;
                 }
-                // if((angle<90 && (isNaN(lastAngle) || lastAngle>90)) || isNaN(angle)) {
-                //     angle = lastAngle;
-                //     // console.log('value', parseInt(angle)/10, parseInt(lastAngle)/10);
-                //     lastAngle = lastAngle;
-                // }else {
-                //     // console.log('value', parseInt(angle)/10, parseInt(lastAngle)/10);
-                //     lastAngle = angle;
-                // }
+                firstInTheLoop = false;
                     
             }
             else if (splitArray[i] =="Torque") {
@@ -166,17 +122,15 @@ async function readLoop() {
                 else if(mode == 's') mode_string="spin";
                 else if(mode == 'v') mode_string="vibrate";
                 document.getElementById("mode").innerHTML = mode_string;
-                
 
             }
-            
-  
-        
+
         }
         // setTimeout(function(){
         // }, 200); 
-        // console.log("log", torque, angle, angleOut, velocity, velocityOut, mode);
+        // console.log("log", zeroAngle, angleOut, angleOut);
         if(splitArray[i+1] != NaN) console.log("check", splitArray[i+1]);
-
+        
+        
     }
 }

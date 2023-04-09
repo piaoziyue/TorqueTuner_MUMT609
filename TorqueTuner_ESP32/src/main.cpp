@@ -314,7 +314,10 @@ void sendI2C(TorqueTuner * knob_) {
   checksum_tx = calcsum(tx_data, I2C_BUF_SIZE);
   memcpy(tx_data + I2C_BUF_SIZE , &checksum_tx, 2);
   // printf("angle_clip %d \n", knob_->angle_unclipped);
-  printf("Torque %d Angle %d AngleOut %d Velocity %f VelocityOut %f Mode %c \n",knob_->torque,knob_->angle,knob_->velocity,knob_->velocity_out,knob_->active_mode->name);
+  printf("Torque,%d,Angle,%d,AngleOut,%d,Velocity,%f,VelocityOut,%f,Mode,%c,\n",knob_->torque,knob_->angle,knob_->velocity,knob_->velocity_out,knob_->active_mode->name);
+  
+  // printf("Angle,%d,",knob_->angle);
+  // delay(40);
   int n = Wire.write(tx_data, I2C_BUF_SIZE + CHECKSUMSIZE);
   Wire.endTransmission();    // stop transmitting
 }

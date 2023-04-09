@@ -170,11 +170,5 @@ SVG.on(document, 'DOMContentLoaded', function() {
     }
     pianoRoll = new PianoRoll("drawing", playHandler, onOffHanlder);
 });
-/*
-WORKING BUG LOG 
-- X prefix means good workaround found, but the "common sense" approach still fails and idk why
 
-
-
-*/
 
