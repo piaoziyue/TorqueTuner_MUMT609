@@ -22,6 +22,7 @@ function draw() {
   
   // calculate the angle of the cursor based on the serial number
   let angle_2pi = map(serialNumber, 0, 3600, 0, TWO_PI);
+  let torque_visual = map(abs(torque), 0, 50, 0, 50);
   
   // calculate the x and y coordinates of the cursor based on the angle and ring radius
   let cursorX = centerX + sin(angle_2pi) * ringRadius;
@@ -44,6 +45,7 @@ function draw() {
   noStroke();
   fill('rgb(82,150,230)');
   ellipse(cursorX, cursorY, cursorRadius * 2);
+  rect(centerX-13,centerY+80-torque_visual, 25, 25+torque_visual);
 
   noFill();
   

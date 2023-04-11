@@ -732,7 +732,7 @@ class PianoRoll {
 
             elem.on('dblclick', (event)=>{
                 let svgXY = this.svgMouseCoord(event);
-                let pitchPos = this.svgXYtoPitchPosQuant(svgXY.x, svgXY.y);
+                let pitchPos = this.svgXYtoPitchPosQuant(svgXY.x-30, svgXY.y);
                 this.addNote(pitchPos.pitch, pitchPos.position, 4/this.noteSubDivision, false);
             }); 
         });

@@ -409,6 +409,7 @@ void setup() {
   // Setup LCD
   lcd.begin(16,2);
   lcd.print("Booting up");
+  lcd.clear();
   #endif
 
   // Start serial

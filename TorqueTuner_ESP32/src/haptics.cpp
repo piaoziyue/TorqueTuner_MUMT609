@@ -180,12 +180,14 @@ int16_t Vibrate::calc(void* ptr) {
 	TorqueTuner* knob = (TorqueTuner*)ptr;
 	float val = 0;
 	float delta_angle_min = (knob->angle_unclipped - min) / 10.0;
-	if (delta_angle_min < 0 && delta_angle_min > - threshold) {
-		val = WALL_TORQUE * stiffness * abs(delta_angle_min) - damping * knob->velocity;
-	} else {
-		float delta_angle_max = (knob->angle_unclipped - max) / 10.0;
-		if (delta_angle_max > 0 && delta_angle_max < threshold) {
-			val = -WALL_TORQUE * stiffness * abs(delta_angle_max) - damping * knob->velocity;
+	if (knob->angle_delta != 0 && knob->velocity_out !=0){
+		if (delta_angle_min < 0 && delta_angle_min > - threshold) {
+			val = WALL_TORQUE * stiffness * abs(delta_angle_min) - damping * knob->velocity;
+		} else {
+			float delta_angle_max = (knob->angle_unclipped - max) / 10.0;
+			if (delta_angle_max > 0 && delta_angle_max < threshold) {
+				val = -WALL_TORQUE * stiffness * abs(delta_angle_max) - damping * knob->velocity;
+			}
 		}
 	}
 	return static_cast<int16_t> (round(val));
@@ -193,13 +195,15 @@ int16_t Vibrate::calc(void* ptr) {
 
 int16_t Click::calc(void* ptr) {
 	TorqueTuner* knob = (TorqueTuner*)ptr;
-	float val;
-	if (knob->angle_out <= min) {
-		val = WALL_TORQUE;
-	} else if (knob->angle_out >= max) {
-		val = -WALL_TORQUE;
-	} else {
-		val = static_cast<float>((tf_click[idx])) / TABLE_RESOLUTION * knob->scale ;
+	float val=0;
+	if (knob->angle_out != 0 && knob->velocity_out !=0){
+		if (knob->angle_out <= min) {
+			val = WALL_TORQUE;
+		} else if (knob->angle_out >= max) {
+			val = -WALL_TORQUE;
+		} else {
+			val = static_cast<float>((tf_click[idx/5])) / TABLE_RESOLUTION * knob->scale*2 ;
+		}
 	}
 	return static_cast<int16_t> (round(val));
 };
@@ -220,27 +224,33 @@ int16_t Inertia::calc(void* ptr) {
 
 int16_t LinSpring::calc(void* ptr) {
 	TorqueTuner* knob = (TorqueTuner*)ptr;
-	float val = - (knob->angle_out) / 1800.0; //-(knob->angle_out - 1800) / 1800.0;
-	if (knob->angle_unclipped <= min) {
-		val = 1;
-	} else if (knob->angle_unclipped >= max) {
-		val = -1;
-	}
-	val *= knob->scale/1.5;
+	float val = 0 ;
+	if (knob->angle_out != 0 && knob->velocity_out !=0){
+		val = - (knob->angle_out) / 1800.0; //-(knob->angle_out - 1800) / 1800.0;
+		if (knob->angle_unclipped <= min) {
+			val = 1;
+		} else if (knob->angle_unclipped >= max) {
+			val = -1;
+		}
+		val *= knob->scale/2;
+	}else val = 0;
+	
 	return static_cast<int16_t> (round(val));
 };
 
 int16_t ExpSpring::calc(void* ptr) {
 	TorqueTuner* knob = (TorqueTuner*)ptr;
-	float val = static_cast<float>(tf_exp_spring[(idx+900)%3600]) / TABLE_RESOLUTION;
-
-	if (knob->angle_unclipped <= min) {
-		val = 1;
-	} else if (knob->angle_unclipped >= max) {
-		val = -1;
+	float val = 0;
+	if (knob->angle_delta != 0 && knob->velocity_out !=0){
+		val = static_cast<float>(tf_exp_spring[idx]) / TABLE_RESOLUTION;
+		if (knob->angle_unclipped <= min) {
+			val = 1;
+		} else if (knob->angle_unclipped >= max) {
+			val = -1;
+		}
+		val *= knob->scale;
 	}
 
-	val *= knob->scale/1.5;
 	return static_cast<int16_t> (round(val));
 };
 

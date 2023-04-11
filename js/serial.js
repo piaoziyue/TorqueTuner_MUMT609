@@ -97,9 +97,12 @@ async function readLoop() {
                 firstInTheLoop = false;
                     
             }
-            else if (splitArray[i] =="Torque") {
-                if(isNaN(splitArray[i+1])==false) torque = parseInt(splitArray[i+1]);
-                else torque=0;
+            else if (splitArray[i] =="Torque")
+            {
+                if(isNaN(splitArray[i+1])==false) 
+                    torque = parseInt(splitArray[i+1]);
+                else torque=lastTorque;
+                lastTorque = torque;
             }
             else if (splitArray[i] =="AngleOut"){
                 if(isNaN(splitArray[i+1])==false) angleOut = parseInt(splitArray[i+1]);
