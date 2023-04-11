@@ -83,15 +83,15 @@ async function readLoop() {
                   && (splitArray[i+1]>Math.floor(lastAngle/1000)+10 || splitArray[i+1]<Math.floor(lastAngle/1000)-10) ) 
                     angle = parseInt(splitArray[i+1]);
                 else angle=lastAngle;
-                setTimeout(function(){
-                        }, 200);
+                // setTimeout(function(){
+                //         }, 200);
                 lastAngle = angle;
                 
                 console.log("log", firstInTheLoop);
                 if(firstInTheLoop){
                     console.log("here");
-                    setTimeout(function(){
-                    }, 200);
+                    // setTimeout(function(){
+                    // }, 200);
                     zeroAngle = angle;
                 }
                 firstInTheLoop = false;

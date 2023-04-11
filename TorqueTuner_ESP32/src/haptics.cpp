@@ -199,7 +199,7 @@ int16_t Click::calc(void* ptr) {
 	} else if (knob->angle_out >= max) {
 		val = -WALL_TORQUE;
 	} else {
-		val = static_cast<float>((tf_click[idx])) / TABLE_RESOLUTION * knob->scale;
+		val = static_cast<float>((tf_click[idx])) / TABLE_RESOLUTION * knob->scale ;
 	}
 	return static_cast<int16_t> (round(val));
 };
@@ -220,19 +220,19 @@ int16_t Inertia::calc(void* ptr) {
 
 int16_t LinSpring::calc(void* ptr) {
 	TorqueTuner* knob = (TorqueTuner*)ptr;
-	float val = - (knob->angle_out - 1800) / 1800.0;
+	float val = - (knob->angle_out) / 1800.0; //-(knob->angle_out - 1800) / 1800.0;
 	if (knob->angle_unclipped <= min) {
 		val = 1;
 	} else if (knob->angle_unclipped >= max) {
 		val = -1;
 	}
-	val *= knob->scale;
+	val *= knob->scale/1.5;
 	return static_cast<int16_t> (round(val));
 };
 
 int16_t ExpSpring::calc(void* ptr) {
 	TorqueTuner* knob = (TorqueTuner*)ptr;
-	float val = static_cast<float>(tf_exp_spring[idx]) / TABLE_RESOLUTION;
+	float val = static_cast<float>(tf_exp_spring[(idx+900)%3600]) / TABLE_RESOLUTION;
 
 	if (knob->angle_unclipped <= min) {
 		val = 1;
@@ -240,7 +240,7 @@ int16_t ExpSpring::calc(void* ptr) {
 		val = -1;
 	}
 
-	val *= knob->scale;
+	val *= knob->scale/1.5;
 	return static_cast<int16_t> (round(val));
 };
 

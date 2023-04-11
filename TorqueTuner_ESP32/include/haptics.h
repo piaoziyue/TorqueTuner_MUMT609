@@ -207,7 +207,7 @@ public:
     float velocity_out = 0;
     float target_velocity = 0; // [-500;500]
     float acceleration = 0; // [-100;100]
-    float scale = 75.0;
+    float scale = 50.0;
     float stretch = 1; // Corresponds to detents in click and magnet mode.
     bool rising_index = false; // for back_forth
     // DEMOSTRATION

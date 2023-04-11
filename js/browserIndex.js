@@ -107,13 +107,14 @@ function playPianoRoll(pianoRoll){
         let pitchMidi = pitchStringToMidiPitch(pitchOfNote);
         let midiChanges
         let pitchRange = 6;
-        midiChanges = mapValue(angle-zeroAngle-900, -900, 2700, -pitchRange, pitchRange);
+        midiChanges = mapValue((angle-zeroAngle+1800)%3600, -1800, 1800, -6, 6);
+        console.log("midiChanges", (angle-zeroAngle+1800)%3600, midiChanges)
         // if((angle-zeroAngle)<1800) midiChanges = mapValue(angle-zeroAngle, 0, 1800, 0, 6);
         // else midiChanges = -1 * mapValue(angle-zeroAngle, 1800, 3600, 6, 0);
         newPitchMidi = midiChanges+pitchMidi; //Math.floor(midiChanges+pitchMidi);
         // let newPitch = midiPitchToPitchString(newPitchMidi);
 
-        let newPitchTonefre = Tone.Frequency(newPitchMidi, "midi");
+        let newPitchTonefre = Tone.Frequency(newPitchMidi-6, "midi");
 
         // console.log("pitch change", pitchOfNote, midiChanges, pitchMidi, newPitchMidi);
 
