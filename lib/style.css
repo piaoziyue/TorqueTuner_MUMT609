@@ -153,12 +153,13 @@ body {
 
 /* Style the left part */
 .left-part {
-  flex: 1;
+  flex: 3;
+  /* width: 700px; */
 }
 
 /* Style the right part */
 .right-part {
-  flex: 3;
+  flex: 5;
 }
 
 button {
