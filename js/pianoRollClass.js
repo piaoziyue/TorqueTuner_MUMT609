@@ -116,8 +116,8 @@ class PianoRoll {
         this.xSnap = 1; //x-variable will change depending on user quantization choice, or be vertLineSpace as calculated below
         this.ySnap = this.noteHeight;
 
-        this.backgroundColor1 = '#ddd';
-        this.backgroundColor2 = '#bbb';
+        this.backgroundColor1 = '#dfe5eb';
+        this.backgroundColor2 = '#c2c8cf';
         this.noteColor = '#f88';
         this.selectedNoteColor = '#f4dd33'
         this.thickLineWidth = 1.8;
@@ -258,7 +258,7 @@ class PianoRoll {
         this.snapshotNoteState();
         // }
 
-        this.playHandler(pitch);
+        // this.playHandler(pitch);
 
         return rect.noteId;
     }

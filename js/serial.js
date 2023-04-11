@@ -10,7 +10,6 @@ var mode;
 var mode_string;
 
 var startTwist = false;
-var veloInputOrNot=false;
 var pitchBendOrNot=true;
 
 var lastTorque=0;

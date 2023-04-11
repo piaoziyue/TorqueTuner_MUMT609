@@ -62,10 +62,12 @@ void TorqueTuner::update_angle() {
 
 
 void TorqueTuner::set_mode(int mode_idx) {
+	
 	if (active_mode != mode_list[mode_idx]) {
 		active_mode = mode_list[mode_idx];
 		active_mode->reset(angle);
 		angle_last = angle;
+		torque = 0;
 		angle_out = 0;
 		angle_unclipped = 0;
 		start_angle = angle; // initialize start_angle

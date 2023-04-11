@@ -21,7 +21,7 @@ function draw() {
   let centerY = height / 2;
   
   // calculate the angle of the cursor based on the serial number
-  let angle_2pi = map(serialNumber-zeroAngle, 0, 3600-zeroAngle, 0, TWO_PI);
+  let angle_2pi = map(serialNumber, 0, 3600, 0, TWO_PI);
   
   // calculate the x and y coordinates of the cursor based on the angle and ring radius
   let cursorX = centerX + sin(angle_2pi) * ringRadius;
@@ -48,6 +48,6 @@ function draw() {
   noFill();
   
   // update the serial number every frame (this should be replaced with real-time data from the serial port)
-  if(isNaN(angle)==false) serialNumber = angle%3600;
+  if(isNaN(angle)==false) serialNumber = (angle-zeroAngle+3600)%3600;
   // console.log("angle out1", angle)
 }

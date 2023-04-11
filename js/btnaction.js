@@ -1,15 +1,15 @@
 
-document.getElementById("veloInput").onclick = function() {
-    veloInputOrNot = true;
-    pitchBendOrNot = false;
-    console.log("click veloInput");
-};
+// document.getElementById("veloInput").onclick = function() {
+//     veloInputOrNot = true;
+//     pitchBendOrNot = false;
+//     console.log("click veloInput");
+// };
 
-document.getElementById("pitchBend").onclick = function() {
-    pitchBendOrNot = true;
-    veloInputOrNot = false;
-    console.log("click pitchBend");
-}; 
+// document.getElementById("pitchBend").onclick = function() {
+//     pitchBendOrNot = true;
+//     veloInputOrNot = false;
+//     console.log("click pitchBend");
+// }; 
 
 document.getElementById("haps1").addEventListener("click", function() {
     // update date the mode to wallet
@@ -66,6 +66,15 @@ document.getElementById("haps2").addEventListener("click", function() {
     zeroAngle = angle;
   });
   document.getElementById("hapd3").addEventListener("click", function() {
+    // update date the mode to dynamic vibro
+    thisMode = 'd';
+    console.log("clickmode", thisMode);
+    writeToStream(thisMode);
+    setTimeout(function(){
+    }, 8000);
+    zeroAngle = angle;
+  });
+  document.getElementById("hapd4").addEventListener("click", function() {
     // update date the mode to magnet
     thisMode = 'm';
     console.log("clickmode", thisMode);
@@ -74,8 +83,8 @@ document.getElementById("haps2").addEventListener("click", function() {
     }, 8000);
     zeroAngle = angle;
   });
-  document.getElementById("hapc1").addEventListener("click", function() {
-    // change the value of A1
-    // thisMode = 'w';
-  });
+//   document.getElementById("hapc1").addEventListener("click", function() {
+//     // change the value of A1
+//     // thisMode = 'w';
+//   });
   

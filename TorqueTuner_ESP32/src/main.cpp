@@ -491,6 +491,10 @@ void loop() {
     lcd.clear();
     lcd.setCursor(0, 1);
     print_state(changedMode);
+    knob.torque = 0;
+    knob.scale = 0;
+	  knob.stretch = 0;
+	  knob.target_velocity = 0;
     knob.set_mode(changedMode); //set mode to click
     delay(50);
   }

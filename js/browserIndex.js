@@ -5,6 +5,7 @@
 
 var pitchOfNote;
 let getBPM = () =>  Tone.Transport.bpm.value;
+var newPitchMidi;
 
 function pianoRollToToneEvents(pianoRoll){
     let notes = pianoRoll.notes;
@@ -87,8 +88,7 @@ function playPianoRoll(pianoRoll){
         durThisNote = Math.round(value.dur*2)/2;
         pitchOfNote = value.pitch;
 
-        if (veloInputOrNot) pianoRoll.playHandler(value.pitch, value.dur, noteVelo); //and velocity once that's in the piano roll
-        else pianoRoll.playHandler(value.pitch, value.dur, 0.5);
+        pianoRoll.playHandler(value.pitch, value.dur, 0.5);
 
         preInd = value.info.ind;
 
@@ -105,8 +105,12 @@ function playPianoRoll(pianoRoll){
         // triggered every eighth note.
 
         let pitchMidi = pitchStringToMidiPitch(pitchOfNote);
-        let midiChanges = mapValue(angle, 0, 3600, -6, 6);
-        let newPitchMidi = midiChanges+pitchMidi; //Math.floor(midiChanges+pitchMidi);
+        let midiChanges
+        let pitchRange = 6;
+        midiChanges = mapValue(angle-zeroAngle-900, -900, 2700, -pitchRange, pitchRange);
+        // if((angle-zeroAngle)<1800) midiChanges = mapValue(angle-zeroAngle, 0, 1800, 0, 6);
+        // else midiChanges = -1 * mapValue(angle-zeroAngle, 1800, 3600, 6, 0);
+        newPitchMidi = midiChanges+pitchMidi; //Math.floor(midiChanges+pitchMidi);
         // let newPitch = midiPitchToPitchString(newPitchMidi);
 
         let newPitchTonefre = Tone.Frequency(newPitchMidi, "midi");
