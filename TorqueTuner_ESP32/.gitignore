@@ -1,5 +1,0 @@
-*.sublime-*
-wifi_credentials.h
-.pio/*
-.vscode/*
-TorqueTuner-ESP32.code-workspace

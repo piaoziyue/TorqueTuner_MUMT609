@@ -1,7 +1,0 @@
-pip install matplotlib
-pip install pyserial
-pip3 install pysimplegui
-pip install scipy
-pip install simpleaudio
-pip install -U scikit-learn
-pip3 install numpy
