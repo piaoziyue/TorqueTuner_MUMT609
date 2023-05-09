@@ -3,6 +3,7 @@ let serialNumber = 0; // initialize serial number
 let ringRadius = 150; // radius of the ring
 let cursorRadius = 10; // radius of the cursor
 var startAngle = 0;
+var angle_2pi;
 
 function setup() {
     var canvas = createCanvas(410, 400);
@@ -21,7 +22,7 @@ function draw() {
   let centerY = height / 2;
   
   // calculate the angle of the cursor based on the serial number
-  let angle_2pi = map(serialNumber, 0, 3600, 0, TWO_PI);
+  angle_2pi = map(serialNumber, 0, 3600, 0, TWO_PI);
   let torque_visual = map(abs(torque), 0, 50, 0, 50);
   
   // calculate the x and y coordinates of the cursor based on the angle and ring radius
@@ -29,6 +30,7 @@ function draw() {
   let cursorY = centerY - cos(angle_2pi) * ringRadius;
 
   
+
   // draw the ring
   noFill();
   ellipse(centerX, centerY, (ringRadius-cursorRadius-3) * 2);

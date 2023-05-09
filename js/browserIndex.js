@@ -120,6 +120,7 @@ function playPianoRoll(pianoRoll){
 
         synth.setNote(newPitchTonefre);
         
+        
     }, "16n").start();
     
 }

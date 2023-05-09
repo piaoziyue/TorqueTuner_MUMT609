@@ -50,6 +50,9 @@ async function connect() {
 
     reader = inputStream.getReader();
     readLoop();
+
+    if(angle_2pi>=900 && angle_2pi<=2700) writeToStream("max");
+    else writeToStream("normal");
     
 }
 
