@@ -54,6 +54,8 @@ var numVeloDel = 0;
 var noteVelo;
 var prePitch;
 var preDur;
+var shifter = new Tone.PitchShift().toDestination();;
+
 
 function playPianoRoll(pianoRoll){
     let toneEvents = pianoRollToToneEvents(pianoRoll);
@@ -63,6 +65,7 @@ function playPianoRoll(pianoRoll){
     let playScreenDist = playTime * getBPM() / 60 * pianoRoll.quarterNoteWidth;
     let bpm = getBPM();
     var preInd = 0;
+    
     
     pianoRoll.playCursorElement.opacity(1);
 
@@ -105,24 +108,14 @@ function playPianoRoll(pianoRoll){
         // console.log("begin loop", sumVeloDel, numVeloDel);
         // triggered every eighth note.
 
-        let pitchMidi = pitchStringToMidiPitch(pitchOfNote);
+        // let pitchMidi = pitchStringToMidiPitch(pitchOfNote);
         let midiChanges
         let pitchRange = 6;
-        midiChanges = mapValue((angle-zeroAngle+1800)%3600, -1800, 1800, -6, 6);
-        console.log("midiChanges", (angle-zeroAngle+1800)%3600, midiChanges)
-        // if((angle-zeroAngle)<1800) midiChanges = mapValue(angle-zeroAngle, 0, 1800, 0, 6);
-        // else midiChanges = -1 * mapValue(angle-zeroAngle, 1800, 3600, 6, 0);
-        newPitchMidi = midiChanges+pitchMidi; //Math.floor(midiChanges+pitchMidi);
-        // let newPitch = midiPitchToPitchString(newPitchMidi);
-
-        let newPitchTonefre = Tone.Frequency(newPitchMidi-6, "midi");
-
-        // console.log("pitch change", pitchOfNote, midiChanges, pitchMidi, newPitchMidi);
-
-        current.setNote(newPitchTonefre);
+        midiChanges = mapValue((angle-zeroAngle)%3600, -3600, 3600, -pitchRange, pitchRange);
+        console.log("midi", angle, zeroAngle, midiChanges)
+        shifter.pitch = midiChanges;
         
-        
-    }, "16n").start();
+    }, 0.01).start(0);
     
 }
 function pitchStringToMidiPitch(pitch){ 
@@ -159,36 +152,35 @@ var startNoteTime;
 // })
 // var current = samples['guzheng'];
 const sampler = new Tone.Sampler({
-    ext: '.[mp3|ogg]', // use setExt to change the extensions on all files // do not change this variable //
+    ext: '.mp3', // use setExt to change the extensions on all files // do not change this variable //
     urls: {
-        'A1': 'A1.[mp3|ogg]',
-        'A2': 'A2.[mp3|ogg]',
-        'A3': 'A3.[mp3|ogg]',
-        'A4': 'A4.[mp3|ogg]',
-        'C1': 'C1.[mp3|ogg]',
-        'C2': 'C2.[mp3|ogg]',
-        'C3': 'C3.[mp3|ogg]',
-        'C4': 'C4.[mp3|ogg]',
-        'C5': 'C5.[mp3|ogg]',
-        'D1': 'D1.[mp3|ogg]',
-        'D2': 'D2.[mp3|ogg]',
-        'D3': 'D3.[mp3|ogg]',
-        'D4': 'D4.[mp3|ogg]',
-        'E1': 'E1.[mp3|ogg]',
-        'E2': 'E2.[mp3|ogg]',
-        'E3': 'E3.[mp3|ogg]',
-        'E4': 'E4.[mp3|ogg]',
-        'G1': 'G1.[mp3|ogg]',
-        'G2': 'G2.[mp3|ogg]',
-        'G3': 'G3.[mp3|ogg]',
-
+        'A1': 'A1.mp3',
+        'A2': 'A2.mp3',
+        'A3': 'A3.mp3',
+        'A4': 'A4.mp3',
+        'C1': 'C1.mp3',
+        'C2': 'C2.mp3',
+        'C3': 'C3.mp3',
+        'C4': 'C4.mp3',
+        'C5': 'C5.mp3',
+        'D1': 'D1.mp3',
+        'D2': 'D2.mp3',
+        'D3': 'D3.mp3',
+        'D4': 'D4.mp3',
+        'E1': 'E1.mp3',
+        'E2': 'E2.mp3',
+        'E3': 'E3.mp3',
+        'E4': 'E4.mp3',
+        'G1': 'G1.mp3',
+        'G2': 'G2.mp3',
+        'G3': 'G3.mp3',
     },
 
     // Cela règle la durée de permanence des notes jouées
-    release: 10,
-
+    // release: 10,
     baseUrl: "samples/guzheng/"
 }).toDestination();
+sampler.connect(shifter);
 
 SVG.on(document, 'DOMContentLoaded', function() {
     let playHandler = function(pitch_, duration_='16n', velocity_=1){
@@ -199,18 +191,19 @@ SVG.on(document, 'DOMContentLoaded', function() {
         let pitchString = typeof pitch === 'string' ? pitch : this.midiPitchToPitchString(pitch);
         startNoteTime = Tone.now();
 
-        console.log("startNoteTime", startNoteTime, duration, startNoteTime)
+        console.log("shifter", shifter)
         sampler.triggerAttackRelease(pitchString, duration, startNoteTime, velocity);
+        // sampler.connect(shifter);
     }
 
 
     let onOffHanlder = function(pitch, onOff){
         let pitchString = typeof pitch === 'string' ? pitch : this.midiPitchToPitchString(pitch);
-        if(onOff == 'on'){
-            sampler.triggerAttack(pitchString);
-        } else {
-            sampler.triggerRelease(pitchString);
-        }
+        // if(onOff == 'on'){
+        //     sampler.triggerAttack(pitchString);
+        // } else {
+        //     sampler.triggerRelease(pitchString);
+        // }
     }
     pianoRoll = new PianoRoll("drawing", playHandler, onOffHanlder);
 });

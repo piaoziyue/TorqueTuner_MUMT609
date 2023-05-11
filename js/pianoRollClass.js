@@ -972,10 +972,9 @@ class PianoRoll {
             let newPitch = playHandler.pitch + value;
             let newPitchString = typeof newPitch === 'string' ? newPitch : this.midiPitchToPitchString(newPitch);
             console.log("newPitch", newPitch, newPitchString, value);
-            synth.triggerAttackRelease(newPitchString, playHandler.duration-(restartNoteTime-startNoteTime), restartNoteTime, playHandler.velocity);
-            synth.setNote(newPitchString);
+            sampler.triggerAttackRelease(newPitchString, playHandler.duration-(restartNoteTime-startNoteTime), restartNoteTime, playHandler.velocity);
         }else if(pitchOrVelo == "velocity"){
-            synth.triggerAttackRelease(playHandler.PitchString, playHandler.duration-(restartNoteTime-startNoteTime), restartNoteTime, value);
+            sampler.triggerAttackRelease(playHandler.PitchString, playHandler.duration-(restartNoteTime-startNoteTime), restartNoteTime, value);
         }
     }
 }
