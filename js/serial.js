@@ -50,6 +50,7 @@ async function connect() {
 
     reader = inputStream.getReader();
     readLoop();
+    
 
     if(angle_2pi>=900 && angle_2pi<=2700) writeToStream("max");
     else writeToStream("normal");
@@ -64,14 +65,14 @@ function writeToStream(line) {
 }
 
 async function readLoop() {
-    console.log('Readloop');
-    
+
     while (true) {
+        console.log('Readloop', pianoRoll.cursorPosition);
+    
         
         const { value, done } = await reader.read();
 
         let splitArray = value.split(",");
-        console.log("split", splitArray)
 
         for (i=0; i<value.length-1; i++){
             if (splitArray[i] == "Velocity") {

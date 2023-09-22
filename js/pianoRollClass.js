@@ -215,7 +215,23 @@ class PianoRoll {
             let color = i % 2 == 0 ? this.backgroundColor1 : this.backgroundColor2;
             let panel = this.svgRoot.rect(measureWidth + this.base, this.pianoRollHeight).move(i*measureWidth + this.base, 0).fill(color);
             this.backgroundElements.add(panel);
+
+            const textElement = this.svgRoot.text((i+1).toString());
+            textElement.font({ size: 12 }).fill('black');
+            textElement.move(i*measureWidth + 2 + this.base, 880);
         }
+
+        for(let i = 0; i < this.numMeasures; i++){
+            let color = i % 2 == 0 ? this.backgroundColor1 : this.backgroundColor2;
+            let panel = this.svgRoot.rect(measureWidth + this.base, this.pianoRollHeight).move(i*measureWidth + this.base, 0).fill(color);
+            this.backgroundElements.add(panel);
+
+            const textElement = this.svgRoot.text((i+1).toString());
+            textElement.font({ size: 12 }).fill('black');
+            textElement.move(i*measureWidth + 2 + this.base, 880);
+
+        }
+        
         for(let i = 1; i < numVertLines; i++){
             let xPos = i*vertLineSpace;
             let strokeWidth = xPos % this.quarterNoteWidth == 0 ? this.thickLineWidth : this.thinLineWidth;
@@ -248,9 +264,10 @@ class PianoRoll {
             .move(position*this.quarterNoteWidth + this.textDev +this.base, (127-pitch)*this.noteHeight)
             .style('pointer-events', 'none');
         this.attachHandlersOnElement(rect, this.svgRoot);
+        let hapticList = [];
         this.notes[this.noteCount] = {
             elem: rect, 
-            info: {pitch, position, duration, velocity},
+            info: {pitch, position, duration, velocity, hapticList},
             label: text
         }
         this.noteCount++;
@@ -368,7 +385,9 @@ class PianoRoll {
                 y: boundVal(this.mouseMoveRoot.vbY - mouseDetla.y * scrollFactor, 0, this.pianoRollHeight - this.mouseMoveRoot.vbHeight)
             };
             this.svgRoot.viewbox(newVBPos.x, newVBPos.y, this.mouseMoveRoot.vbWidth, this.mouseMoveRoot.vbHeight);
+            // console.log("move", newVBPos.x, newVBPos.y, this.mouseMoveRoot.vbWidth, this.mouseMoveRoot.vbHeight)
         }
+        
     }
 
     mouseZoomHandler(event){
@@ -391,6 +410,7 @@ class PianoRoll {
             };
 
             this.svgRoot.viewbox(newVBPos.x, newVBPos.y, newWidth, newHeight);
+            
         }
     }
 

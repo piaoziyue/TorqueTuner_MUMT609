@@ -149,6 +149,7 @@ body {
   margin-top: 10px;
   justify-content: space-between;
   align-items: start;
+  overflow: hidden;
 }
 
 /* Style the left part */
@@ -238,15 +239,15 @@ button {
   font-size: 12px;
   z-index: 1;
   background-color: #f9f9f9;
-  min-width:  160px;
+  min-width:  250px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
 
 .dropdown-content .column {
   float: left;
   width: 23%;
-  padding: 10px;
-  height: 160px;
+  padding: 20px;
+  height: 140px;
 }
 
 .dropdown-content .column a {
@@ -266,4 +267,131 @@ button {
 
 .dropdown:hover .dropbtn {
   background-color: #1594ba;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 300px;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 30%;
+  height: 15px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+  position: relative;  /* Add this line */
+  left: 2.5%;           /* Adjust the left property as needed */
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  background: #1594ba;
+  cursor: pointer;
+  
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #1594ba;
+  cursor: pointer;
+}
+
+#ff-container {
+  /* display: flex; */
+  align-items: center;
+  /* flex-direction: row; */
+}
+
+#plot-container {
+  width: 1218px;
+  height: 120px;
+  border: 1px solid #1594ba;
+  margin-left: 30px;
+}
+
+#number-buttons {
+  display: flex;
+  flex-direction: row;
+}
+
+.number-button {
+  margin-bottom: 10px;
+  width: 50px;
+  margin-right: 10px;
+}
+
+.number-button.active {
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
+
+#controls {
+  display: flex;
+  flex-direction: center;
+  margin-left: 20px;
+}
+
+#add-button,
+#delete-button {
+  margin-left: 10px;
+  width: 50px;
+}
+
+.pages{
+  display: flex;
+  width: 450%;
+  box-sizing: border-box;
+}
+
+.page{
+  width: 150%;
+  /* height: 100vh; */
+
+  display: flex;
+  justify-content: center;
+  align-items: left;
+  flex-direction: column;
+  gap: 10px;
+  transition: all 1s;
 }

@@ -6,7 +6,7 @@
 var pitchOfNote;
 let getBPM = () =>  Tone.Transport.bpm.value;
 var newPitchMidi;
-
+var playingFlagX;
 function pianoRollToToneEvents(pianoRoll){
     let notes = pianoRoll.notes;
     let bpm = getBPM();
@@ -55,6 +55,15 @@ var noteVelo;
 var prePitch;
 var preDur;
 var shifter = new Tone.PitchShift().toDestination();;
+let playingNote = null;
+var angleData;
+
+function dataUpdate(dataX, dataY) {
+    angleData = mapValue((angle-zeroAngle)%3600, -3600, 3600, 0, 100);
+    dataY.push(angleData); // push data (0-100
+    dataX.push(playingFlagX-84);
+    return dataX, dataY;
+}
 
 
 function playPianoRoll(pianoRoll){
@@ -68,6 +77,9 @@ function playPianoRoll(pianoRoll){
     
     
     pianoRoll.playCursorElement.opacity(1);
+    let dataX = [];
+    let dataY = [];
+    
 
     playCursorLoop = animitter(function(deltaTime, elapsedTime, frameCount){
         if(elapsedTime/1000 >= playTime){
@@ -80,7 +92,15 @@ function playPianoRoll(pianoRoll){
         }
         let playFrac = elapsedTime/1000/playTime;
         pianoRoll.playCursorElement.x(playStartPos + playFrac*playScreenDist);
+        playingFlagX = playStartPos + playFrac*playScreenDist
+        if(playingNote)
+            dataX, dataY = dataUpdate(dataX, dataY)
+            plotData(dataX, dataY, 0);
+        if(playingNote)console.log("playing", dataX, dataY)
+        // if(playingNote)console.log("value", playingNote.info.ind, playStartPos + playFrac*playScreenDist) //pianoRoll.noteCount); //playingNote.pitch)
+        
     }).start();
+
 
     function mapValue(value, oldMin, oldMax, newMin, newMax) {
         return (value - oldMin) * (newMax - newMin) / (oldMax - oldMin) + newMin;
@@ -99,9 +119,10 @@ function playPianoRoll(pianoRoll){
             pianoRollIsPlaying = false;
             preInd = -1;
         }
+        playingNote = value;
     }, toneEvents).start();
     pianoRollIsPlaying = true;
-    
+     
     // NProgress.start();
     
     const loop = new Tone.Loop((time) => {
@@ -112,10 +133,11 @@ function playPianoRoll(pianoRoll){
         let midiChanges
         let pitchRange = 6;
         midiChanges = mapValue((angle-zeroAngle)%3600, -3600, 3600, -pitchRange, pitchRange);
-        console.log("midi", angle, zeroAngle, midiChanges)
+
         shifter.pitch = midiChanges;
         
     }, 0.01).start(0);
+    playingNote = null;
     
 }
 function pitchStringToMidiPitch(pitch){ 
@@ -191,7 +213,6 @@ SVG.on(document, 'DOMContentLoaded', function() {
         let pitchString = typeof pitch === 'string' ? pitch : this.midiPitchToPitchString(pitch);
         startNoteTime = Tone.now();
 
-        console.log("shifter", shifter)
         sampler.triggerAttackRelease(pitchString, duration, startNoteTime, velocity);
         // sampler.connect(shifter);
     }
