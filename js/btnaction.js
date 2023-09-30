@@ -4,7 +4,8 @@
 //     pitchBendOrNot = false;
 //     console.log("click veloInput");
 // };
-var plotsData = []; // Initial plot data
+var plotsData_angle = []; // Initial plot angle data
+var plotsData_torque = []; // Initial plot torque data
 document.getElementById("resetAngle").onclick = function() {
     zeroAngle = angle;
     console.log("reset angle");
@@ -95,21 +96,10 @@ function mapValue(value, oldMin, oldMax, newMin, newMax) {
   return (value - oldMin) * (newMax - newMin) / (oldMax - oldMin) + newMin;
 }
 
-// // Generate random data
-// function generateRandomData() {
-//   const data = [];
-
-//   while(pianoRollIsPlaying) {
-//     angleData = mapValue((angle-zeroAngle)%3600, -3600, 3600, 0, 100);
-//     data.push(angleData); // push data (0-100)
-//     console.log("ran", angleData, pianoRollIsPlaying)
-//   }
-
-//   return data;
-// }
 
 // Plot the data using D3.js
-function plotData(xCoords, yCoords, plotIndex) {
+function plotData(xCoords, yCoords, plotIndex, color) {
+
   const plotContainer = d3.select("#plot-container");
 
   // Clear existing plot
@@ -141,7 +131,7 @@ function plotData(xCoords, yCoords, plotIndex) {
   svg.append("path")
     .datum(data)
     .attr("fill", "none")
-    .attr("stroke", "blue")
+    .attr("stroke", color)
     .attr("d", line);
 
   // Highlight selected plot
@@ -163,16 +153,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
   
   let currentPlotIndex = 0; // Index of the currently selected plot
-
+  
   
   // Plot initial data
-  plotData(plotsData[currentPlotIndex], currentPlotIndex);
+  plotData(plotsData_angle[currentPlotIndex], currentPlotIndex, "blue");
 
   // Number button click event listeners
   function numberButtonClickHandler(index) {
     return function () {
       currentPlotIndex = index;
-      plotData(plotsData[currentPlotIndex], currentPlotIndex);
+      plotData(plotsData_angle[currentPlotIndex], currentPlotIndex, "blue");
     };
   }
 
@@ -186,28 +176,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Add button click event listener
   addButton.addEventListener("click", function () {
-    // plotsData.push(angle);
-    const newPlotIndex = plotsData.length - 1;
+    // plotsData_angle.push(angle);
+    const newPlotIndex = plotsData_angle.length - 1;
     const newNumberButton = createNumberButton(newPlotIndex);
     numberButtonsContainer.appendChild(newNumberButton);
-    // plotData(plotsData[newPlotIndex], newPlotIndex);
   });
 
   // Delete button click event listener
   deleteButton.addEventListener("click", function () {
-    if (plotsData.length === 1) {
+    if (plotsData_angle.length === 1) {
       return; // Prevent deleting the last plot
     }
 
-    plotsData.splice(currentPlotIndex, 1);
+    plotsData_angle.splice(currentPlotIndex, 1);
     const numberButtons = document.getElementsByClassName("number-button");
     numberButtonsContainer.removeChild(numberButtons[currentPlotIndex]);
 
-    if (currentPlotIndex >= plotsData.length) {
-      currentPlotIndex = plotsData.length - 1;
+    if (currentPlotIndex >= plotsData_angle.length) {
+      currentPlotIndex = plotsData_angle.length - 1;
     }
 
-    plotData(plotsData[currentPlotIndex], currentPlotIndex);
+    plotData(plotsData_angle[currentPlotIndex], currentPlotIndex, "blue");
   });
 
   // Create initial number button
@@ -223,6 +212,8 @@ const pages = document.querySelectorAll(".page");
     slide = (direction) => {
 
       direction === "next" ? translate -= translateAmount : translate += translateAmount;
+      dataX_ang = [];
+      dataY_ang = [];
 
       pages.forEach(
         pages => (pages.style.transform = `translateX(${translate}%)`)

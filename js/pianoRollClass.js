@@ -99,7 +99,7 @@ class PianoRoll {
         //svg elements in the pianoRoll background
         this.backgroundElements;
 
-        this.quarterNoteWidth = 76; //in pixels
+        this.quarterNoteWidth = 64; //in pixels
         this.noteHeight = 16; //in pixels
         this.whiteNotes = [0, 2, 4, 5, 7, 9, 11];
         this.noteSubDivision = 16; //where to draw lines and snap to grid
@@ -123,7 +123,7 @@ class PianoRoll {
         this.thickLineWidth = 1.8;
         this.thinLineWidth = 1;
         this.viewportHeight = 360;
-        this.viewportWidth = 1248;
+        this.viewportWidth = 2080;
         this.maxZoom;
         this.noteCount = 0;
         // Create an SVGPoint for future math

@@ -73,7 +73,7 @@ async function readLoop() {
         const { value, done } = await reader.read();
 
         let splitArray = value.split(",");
-
+        console.log("note ", pianoRoll.getNotesAtPosition);
         for (i=0; i<value.length-1; i++){
             if (splitArray[i] == "Velocity") {
                 if(isNaN(splitArray[i+1])==false) velocity = parseInt(splitArray[i+1]);

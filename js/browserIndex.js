@@ -45,7 +45,7 @@ function pianoRollToToneEvents(pianoRoll){
 
 //TODO: maybe move part and playing-flag variables to inside toneclass?
 let playCursorLoop;
-let pianoRollIsPlaying = false;
+let pianoRollIsPlaying = false; //is the cursor is moving which means the piece is playing and the pianoRollIsPlaying is "true"
 let playingPart;
 var durThisNote;
 var durLoop;
@@ -57,11 +57,19 @@ var preDur;
 var shifter = new Tone.PitchShift().toDestination();;
 let playingNote = null;
 var angleData;
+var torqueData;
 
-function dataUpdate(dataX, dataY) {
-    angleData = mapValue((angle-zeroAngle)%3600, -3600, 3600, 0, 100);
-    dataY.push(angleData); // push data (0-100
-    dataX.push(playingFlagX-84);
+function dataUpdate(dataX, dataY, label) {
+    if (label =="angle"){
+        angleData = mapValue((angle-zeroAngle+1800)%3600, 0, 7200, 0, 100);
+        dataY.push(angleData); // push data (0-100
+        dataX.push(playingFlagX-84);
+    }else if(label =="torque"){
+        torqueData = mapValue(torque, -80, 100, 0, 100);
+        dataY.push(torqueData); // push data (0-100
+        dataX.push(playingFlagX-84);
+    }
+    
     return dataX, dataY;
 }
 
@@ -77,8 +85,8 @@ function playPianoRoll(pianoRoll){
     
     
     pianoRoll.playCursorElement.opacity(1);
-    let dataX = [];
-    let dataY = [];
+    var dataX_ang = [];
+    var dataY_ang = [];
     
 
     playCursorLoop = animitter(function(deltaTime, elapsedTime, frameCount){
@@ -94,9 +102,10 @@ function playPianoRoll(pianoRoll){
         pianoRoll.playCursorElement.x(playStartPos + playFrac*playScreenDist);
         playingFlagX = playStartPos + playFrac*playScreenDist
         if(playingNote)
-            dataX, dataY = dataUpdate(dataX, dataY)
-            plotData(dataX, dataY, 0);
-        if(playingNote)console.log("playing", dataX, dataY)
+            dataX_ang, dataY_ang = dataUpdate(dataX_ang, dataY_ang, "angle")
+            plotData(dataX_ang, dataY_ang, 0, "blue");
+            // dataX_tor, dataY_tor = dataUpdate(dataX_tor, dataY_tor, "torque")
+            // plotData(dataX_tor, dataY_tor, 0, "red");
         // if(playingNote)console.log("value", playingNote.info.ind, playStartPos + playFrac*playScreenDist) //pianoRoll.noteCount); //playingNote.pitch)
         
     }).start();
@@ -135,6 +144,8 @@ function playPianoRoll(pianoRoll){
         midiChanges = mapValue((angle-zeroAngle)%3600, -3600, 3600, -pitchRange, pitchRange);
 
         shifter.pitch = midiChanges;
+
+        document.getElementById("test").innerHTML = sampler.isStarted;
         
     }, 0.01).start(0);
     playingNote = null;
