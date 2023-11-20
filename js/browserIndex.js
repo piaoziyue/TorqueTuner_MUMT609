@@ -92,11 +92,8 @@ function playPianoRoll(pianoRoll){
     playCursorLoop = animitter(function(deltaTime, elapsedTime, frameCount){
         if(elapsedTime/1000 >= playTime){
             noteVelo=sumVeloDel/numVeloDel/20;
-            console.log(noteVelo);
-
             pianoRoll.playCursorElement.opacity(0);
             this.complete();
-            console.log("finished playing", elapsedTime/1000, playTime);
         }
         let playFrac = elapsedTime/1000/playTime;
         pianoRoll.playCursorElement.x(playStartPos + playFrac*playScreenDist);
@@ -139,13 +136,17 @@ function playPianoRoll(pianoRoll){
         // triggered every eighth note.
 
         // let pitchMidi = pitchStringToMidiPitch(pitchOfNote);
-        let midiChanges
+        let midiChanges;
         let pitchRange = 6;
-        midiChanges = mapValue((angle-zeroAngle)%3600, -3600, 3600, -pitchRange, pitchRange);
+        let angleDelta = angle-zeroAngle;
+        if (angleDelta>1800) angleDelta = 3600-angleDelta;
+        else if (angleDelta<-1800) angleDelta = -3600-angleDelta;
 
+        midiChanges = mapValue(angleDelta, -1800, 1800, -pitchRange, pitchRange);
+        // document.getElementById("test").innerHTML = midiChanges + " " + angle + " " +zeroAngle;
         shifter.pitch = midiChanges;
 
-        document.getElementById("test").innerHTML = sampler.isStarted;
+        // document.getElementById("test").innerHTML = sampler.isStarted;
         
     }, 0.01).start(0);
     playingNote = null;

@@ -141,7 +141,7 @@ class PianoRoll {
         this.pianoRollWidth;
 
         //variables relating to note-name labels
-        this.pitchStrings = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+        this.pitchStrings = ['D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C', 'C#'];
         this.textDev = 4;
 
         //variables relating to mouse movement state (scroll, zoom, resize, drag, etc)
@@ -690,7 +690,6 @@ class PianoRoll {
         this.svgRoot.off('mousemove');
 
         if(!this.checkIfNoteResizedSignificantly(this.resizeTarget, 3)) return;
-        console.log('resize done');
 
         this.resizeTarget.resize();
 
@@ -991,7 +990,6 @@ class PianoRoll {
         if (pitchOrVelo == "pitch"){
             let newPitch = playHandler.pitch + value;
             let newPitchString = typeof newPitch === 'string' ? newPitch : this.midiPitchToPitchString(newPitch);
-            console.log("newPitch", newPitch, newPitchString, value);
             sampler.triggerAttackRelease(newPitchString, playHandler.duration-(restartNoteTime-startNoteTime), restartNoteTime, playHandler.velocity);
         }else if(pitchOrVelo == "velocity"){
             sampler.triggerAttackRelease(playHandler.PitchString, playHandler.duration-(restartNoteTime-startNoteTime), restartNoteTime, value);

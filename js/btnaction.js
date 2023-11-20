@@ -147,8 +147,8 @@ function plotData(xCoords, yCoords, plotIndex, color) {
 
 // Add event listeners
 document.addEventListener("DOMContentLoaded", function () {
-  const addButton = document.getElementById("add-button");
-  const deleteButton = document.getElementById("delete-button");
+  // const addButton = document.getElementById("add-button");
+  // const deleteButton = document.getElementById("delete-button");
   const numberButtonsContainer = document.getElementById("number-buttons");
 
   
@@ -156,7 +156,7 @@ document.addEventListener("DOMContentLoaded", function () {
   
   
   // Plot initial data
-  plotData(plotsData_angle[currentPlotIndex], currentPlotIndex, "blue");
+  // plotData(plotsData_angle[currentPlotIndex], currentPlotIndex, "blue");
 
   // Number button click event listeners
   function numberButtonClickHandler(index) {
@@ -174,30 +174,30 @@ document.addEventListener("DOMContentLoaded", function () {
     return button;
   }
 
-  // Add button click event listener
-  addButton.addEventListener("click", function () {
-    // plotsData_angle.push(angle);
-    const newPlotIndex = plotsData_angle.length - 1;
-    const newNumberButton = createNumberButton(newPlotIndex);
-    numberButtonsContainer.appendChild(newNumberButton);
-  });
+  // // Add button click event listener
+  // addButton.addEventListener("click", function () {
+  //   // plotsData_angle.push(angle);
+  //   const newPlotIndex = plotsData_angle.length - 1;
+  //   const newNumberButton = createNumberButton(newPlotIndex);
+  //   numberButtonsContainer.appendChild(newNumberButton);
+  // });
 
-  // Delete button click event listener
-  deleteButton.addEventListener("click", function () {
-    if (plotsData_angle.length === 1) {
-      return; // Prevent deleting the last plot
-    }
+  // // Delete button click event listener
+  // deleteButton.addEventListener("click", function () {
+  //   if (plotsData_angle.length === 1) {
+  //     return; // Prevent deleting the last plot
+  //   }
 
-    plotsData_angle.splice(currentPlotIndex, 1);
-    const numberButtons = document.getElementsByClassName("number-button");
-    numberButtonsContainer.removeChild(numberButtons[currentPlotIndex]);
+  //   plotsData_angle.splice(currentPlotIndex, 1);
+  //   const numberButtons = document.getElementsByClassName("number-button");
+  //   numberButtonsContainer.removeChild(numberButtons[currentPlotIndex]);
 
-    if (currentPlotIndex >= plotsData_angle.length) {
-      currentPlotIndex = plotsData_angle.length - 1;
-    }
+  //   if (currentPlotIndex >= plotsData_angle.length) {
+  //     currentPlotIndex = plotsData_angle.length - 1;
+  //   }
 
-    plotData(plotsData_angle[currentPlotIndex], currentPlotIndex, "blue");
-  });
+  //   plotData(plotsData_angle[currentPlotIndex], currentPlotIndex, "blue");
+  // });
 
   // Create initial number button
   const initialNumberButton = createNumberButton(0);
@@ -211,7 +211,7 @@ const pages = document.querySelectorAll(".page");
 
     slide = (direction) => {
 
-      direction === "next" ? translate -= translateAmount : translate += translateAmount;
+      direction === "n653ext" ? translate -= translateAmount : translate += translateAmount;
       dataX_ang = [];
       dataY_ang = [];
 

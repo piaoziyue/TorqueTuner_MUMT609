@@ -67,13 +67,10 @@ function writeToStream(line) {
 async function readLoop() {
 
     while (true) {
-        console.log('Readloop', pianoRoll.cursorPosition);
-    
-        
+        // console.log('Readloop', pianoRoll.cursorPosition);
         const { value, done } = await reader.read();
 
         let splitArray = value.split(",");
-        console.log("note ", pianoRoll.getNotesAtPosition);
         for (i=0; i<value.length-1; i++){
             if (splitArray[i] == "Velocity") {
                 if(isNaN(splitArray[i+1])==false) velocity = parseInt(splitArray[i+1]);
@@ -91,7 +88,6 @@ async function readLoop() {
                 //         }, 200);
                 lastAngle = angle;
                 
-                console.log("log", firstInTheLoop);
                 if(firstInTheLoop){
                     console.log("here");
                     // setTimeout(function(){
@@ -134,8 +130,8 @@ async function readLoop() {
         }
         // setTimeout(function(){
         // }, 200); 
-        // console.log("log", zeroAngle, angleOut, angleOut);
-        if(splitArray[i+1] != NaN) console.log("check", splitArray[i+1]);
+        // console.log("print", zeroAngle, angleOut, angleOut);
+        // if(splitArray[i+1] != NaN) console.log("check", splitArray[i+1]);
         
         
     }
