@@ -98,9 +98,9 @@ function playPianoRoll(pianoRoll){
         let playFrac = elapsedTime/1000/playTime;
         pianoRoll.playCursorElement.x(playStartPos + playFrac*playScreenDist);
         playingFlagX = playStartPos + playFrac*playScreenDist
-        if(playingNote)
-            dataX_ang, dataY_ang = dataUpdate(dataX_ang, dataY_ang, "angle")
-            plotData(dataX_ang, dataY_ang, 0, "blue");
+        
+        //     dataX_ang, dataY_ang = dataUpdate(dataX_ang, dataY_ang, "angle")
+            // plotData(dataX_ang, dataY_ang, 0, "blue");
             // dataX_tor, dataY_tor = dataUpdate(dataX_tor, dataY_tor, "torque")
             // plotData(dataX_tor, dataY_tor, 0, "red");
         // if(playingNote)console.log("value", playingNote.info.ind, playStartPos + playFrac*playScreenDist) //pianoRoll.noteCount); //playingNote.pitch)
@@ -130,14 +130,16 @@ function playPianoRoll(pianoRoll){
     pianoRollIsPlaying = true;
      
     // NProgress.start();
+
     
     const loop = new Tone.Loop((time) => {
         // console.log("begin loop", sumVeloDel, numVeloDel);
         // triggered every eighth note.
-
+        // const currentDate = new Date();
+        // let m1 = currentDate.getMilliseconds();
         // let pitchMidi = pitchStringToMidiPitch(pitchOfNote);
         let midiChanges;
-        let pitchRange = 6;
+        let pitchRange = 7;
         let angleDelta = angle-zeroAngle;
         if (angleDelta>1800) angleDelta = 3600-angleDelta;
         else if (angleDelta<-1800) angleDelta = -3600-angleDelta;
@@ -145,7 +147,9 @@ function playPianoRoll(pianoRoll){
         midiChanges = mapValue(angleDelta, -1800, 1800, -pitchRange, pitchRange);
         // document.getElementById("test").innerHTML = midiChanges + " " + angle + " " +zeroAngle;
         shifter.pitch = midiChanges;
-
+        // const currentDate2 = new Date();
+        // let m2 = currentDate2.getMilliseconds();
+        // console.log("time ", m2-m1)
         // document.getElementById("test").innerHTML = sampler.isStarted;
         
     }, 0.01).start(0);
