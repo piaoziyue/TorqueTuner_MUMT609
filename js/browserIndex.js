@@ -221,7 +221,7 @@ const sampler = new Tone.Sampler({
 sampler.connect(shifter);
 
 SVG.on(document, 'DOMContentLoaded', function() {
-    let playHandler = function(pitch_, duration_='16n', velocity_=1){
+    let playHandler = function(pitch_, duration_='4n', velocity_=1){
         let pitch = pitch_;
         let duration = duration_;
         let velocity = velocity_;
