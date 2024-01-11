@@ -477,15 +477,16 @@ void loop() {
     lcd.clear();
     lcd.setCursor(0, 1);
     lcd.printf("Received: %s", inputString);
-    int changedMode;
+    int changedMode=6;
     if(inputString == "c") changedMode = 0;
     else if(inputString == "m") changedMode = 1;
     else if(inputString == "w") changedMode = 2;
     else if(inputString == "i") changedMode = 3;
+    else if(inputString == "l") changedMode = 4;
     else if(inputString[0] == 'l') {
       int digit = inputString[1] - '0';
-      knob.max_torque *= static_cast<float>(digit) / 9;
-      printf("knob max: %f\n", knob.max_torque);    
+      knob.max_torque *= static_cast<float>(digit) / 3;
+      printf("knob max: %f, %d\n", knob.max_torque, digit);    
       changedMode = 4;
     }
     else if(inputString == "e") changedMode = 5;

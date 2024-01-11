@@ -140,7 +140,7 @@ class PianoRoll {
         this.pianoRollWidth;
 
         //variables relating to note-name labels
-        this.pitchStrings = ['D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C', 'C#'];
+        this.pitchStrings = [ 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
         this.textDev = 4;
 
         //variables relating to mouse movement state (scroll, zoom, resize, drag, etc)
@@ -275,7 +275,7 @@ class PianoRoll {
         // }
 
         // this.playHandler(pitch);
-
+        console.log("addnote", pitch);
         return rect.noteId;
     }
 

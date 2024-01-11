@@ -64,6 +64,7 @@ var dataX_ang = [];
 var dataY_ang = [];
 var dataY_score = [];
 var noteIndex = 0;
+var playingFlagBeat;
 
 function dataUpdate(dataX, dataY, label) {
     if (label =="angle"){
@@ -114,7 +115,7 @@ function playPianoRoll(pianoRoll){
         
         dataX_ang, dataY_ang = dataUpdate(dataX_ang, dataY_ang, "angle")
         plotData(dataX_ang, dataY_ang, 0, "blue");
- 
+        
         // if(playingNote)console.log("value", playingNote.info.ind, playStartPos + playFrac*playScreenDist) //pianoRoll.noteCount); //playingNote.pitch)
         
     }).start();
@@ -127,6 +128,13 @@ function playPianoRoll(pianoRoll){
    
 
     playingPart = new Tone.Part((time, value) => {
+        // console.log("pitch", pianoRoll.notes[noteIndex].info.pitch)
+        let keysArray = Object.keys(pianoRoll.notes);
+        let noteNum = keysArray.length;
+        // console.log("modethis", thisMode[0] == 'l');
+        if (noteNum>noteIndex)
+            noteIndex += 1;
+        changeOnce = 0;
         
         durThisNote = Math.round(value.dur*2)/2;
         pitchOfNote = value.pitch;
@@ -140,11 +148,11 @@ function playPianoRoll(pianoRoll){
             preInd = -1;
         }
 
-        scale = pitchStringToMidiPitch(value.pitch.pitch);
-        pitchscale = Math.floor(mapValue(scale, 51, 72, 9, 0));
-        thisMode = 'l' + pitchscale.toString();
-    //     console.log("endplay", noteIndex, pitchscale)
-        writeToStream(thisMode);
+    //     scale = pitchStringToMidiPitch(value.pitch);
+    //     pitchscale = Math.floor(mapValue(scale, 51, 72, 9, 0));
+    //     thisMode = 'l' + pitchscale.toString();
+    // //     console.log("endplay", noteIndex, pitchscale)
+    //     writeToStream(thisMode);
          
     }, toneEvents)
     // .stop((time, value) => {
@@ -158,12 +166,12 @@ function playPianoRoll(pianoRoll){
     //     console.log("endplay", noteIndex, pitchscale)
     //     writeToStream(thisMode);
     // })
-    // .start();
+    .start();
     pianoRollIsPlaying = true;
      
     // NProgress.start();
     
-      
+    var changeOnce = 0;
     const loop = new Tone.Loop((time) => {
         // console.log("begin loop", sumVeloDel, numVeloDel);
         // triggered every eighth note.
@@ -171,7 +179,7 @@ function playPianoRoll(pianoRoll){
         // let m1 = currentDate.getMilliseconds();
         // let pitchMidi = pitchStringToMidiPitch(pitchOfNote);
         let midiChanges;
-        let pitchRange = 6;
+        let pitchRange = 7;
         let angleDelta = angle-zeroAngle;
         if (angleDelta>1800) angleDelta = 3600-angleDelta;
         else if (angleDelta<-1800) angleDelta = -3600-angleDelta;
@@ -179,9 +187,29 @@ function playPianoRoll(pianoRoll){
         midiChanges = mapValue(angleDelta, -1800, 1800, -pitchRange, pitchRange);
         // console.log("midichange", angleDelta, midiChanges);
         // document.getElementById("test").innerHTML = midiChanges + " " + angle + " " +zeroAngle;
-        shifter.pitch = -midiChanges;
+        shifter.pitch = - midiChanges;
+        console.log("midiChanges", midiChanges, angleDelta);
 
-        console.log("note now", pitchscale, noteIndex)
+        playingFlagBeat = (playingFlagX + 50) / 64;
+        
+        let keysArray = Object.keys(pianoRoll.notes);
+        let noteNum = keysArray.length;
+        // console.log("modethis", thisMode[0] == 'l');
+        if (noteNum>noteIndex) {
+            let nextNote = pianoRoll.notes[noteIndex];
+            // console.log("write", nextNote, noteIndex)
+            if(nextNote.info.position <= playingFlagBeat + 2 && changeOnce == 0 && thisMode[0] == 'l') {
+                pitchscale = Math.floor(mapValue(nextNote.info.pitch, 49, 70, 9, 0));
+                let sendMess = 'l' + pitchscale.toString();
+                writeToStream(sendMess);
+                console.log("write", pitchscale);
+                changeOnce = 1;
+            }
+        } else {
+            noteIndex = 0;
+        }
+        
+        // console.log("change", noteIndex, noteNum)
         
     }, 0.05).start(0);
     playingNote = null;
@@ -202,6 +230,7 @@ function stopPianoRoll(pianoRoll){
         playCursorLoop.complete()
         pianoRoll.playCursorElement.opacity(0);
         pianoRollIsPlaying = false;
+        noteIndex = 0;
         playingPart.stop();
         playingPart.dispose();
     }
@@ -243,6 +272,7 @@ const sampler = new Tone.Sampler({
         'G1': 'G1.mp3',
         'G2': 'G2.mp3',
         'G3': 'G3.mp3',
+        // 'G4': 'G4.mp3',
     },
 
     // Cela règle la durée de permanence des notes jouées

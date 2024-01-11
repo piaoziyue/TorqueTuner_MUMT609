@@ -202,7 +202,7 @@ int16_t Click::calc(void* ptr) {
 		} else if (knob->angle_out >= max) {
 			val = -WALL_TORQUE;
 		} else {
-			val = static_cast<float>((tf_click[idx/5])) / TABLE_RESOLUTION * knob->scale*2 ;
+			val = static_cast<float>((tf_click[idx/5])) / TABLE_RESOLUTION * knob->scale ;
 		}
 	}
 	return static_cast<int16_t> (round(val));

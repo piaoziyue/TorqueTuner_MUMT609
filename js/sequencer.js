@@ -169,12 +169,15 @@ Blob = (function() {
 }());
 
 midiUpload.on('addedfile', function(file) {
+
+  noteIndex = 0;
   pianoRoll.clearAllNotes();
   uploadMidiFile(file);
 });
 
 midiClear.addEventListener("click", event=> {
   pianoRoll.clearAllNotes();
+  noteIndex = 0;
 })
 
 function uploadMidiFile(file) {

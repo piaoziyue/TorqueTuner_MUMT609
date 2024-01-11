@@ -35,8 +35,7 @@ document.getElementById("haps2").addEventListener("click", function() {
   document.getElementById("hapd1").addEventListener("click", function() {
     //TODO: update date the mode to linear spring
      pitchscale = 5;
-     thisMode = 'l' + pitchscale.toString();
-     console.log("clickmode", thisMode);
+     thisMode = 'l' + pitchscale.toString() ;
      console.log("linear", thisMode);
      writeToStream(thisMode);
 
