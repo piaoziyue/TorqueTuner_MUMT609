@@ -14,7 +14,7 @@
 #include "variants.h"
 
 const int TABLE_RESOLUTION = 65535;
-const int MAX_TORQUE = 180;
+const int MAX_TORQUE = 100;
 const int WALL_TORQUE = 180;
 const float MAX_VELOCITY = 500;
 
@@ -222,7 +222,7 @@ public:
     // PERFORMANCE
     int16_t performed_angles[3] = {0,0,0}; //also hard coded as 3 for now
     int16_t width = 600; // distance from target to max torque, higher is harder
-	float max_torque = 30.0; // higher is easier
+	float max_torque = 50.0; // higher is easier
     // SCORE
     int score = 0; 
     int max_score = 1000;

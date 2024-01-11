@@ -183,6 +183,7 @@ function uploadMidiFile(file) {
     reader.onload = function(e) {
       var buffer = e.target.result;
       song = midiConverter.midiToJson(buffer);
+      console.log("song", song);
       drawSong(song);
       updateDownloadLink();
       document.getElementById("midi-info").innerHTML = file.name;

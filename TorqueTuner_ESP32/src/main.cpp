@@ -482,7 +482,12 @@ void loop() {
     else if(inputString == "m") changedMode = 1;
     else if(inputString == "w") changedMode = 2;
     else if(inputString == "i") changedMode = 3;
-    else if(inputString == "l") changedMode = 4;
+    else if(inputString[0] == 'l') {
+      int digit = inputString[1] - '0';
+      knob.max_torque *= static_cast<float>(digit) / 9;
+      printf("knob max: %f\n", knob.max_torque);    
+      changedMode = 4;
+    }
     else if(inputString == "e") changedMode = 5;
     else if(inputString == "f") changedMode = 6;
     else if(inputString == "s") changedMode = 7;
@@ -497,7 +502,6 @@ void loop() {
 	  knob.stretch = 0;
 	  knob.target_velocity = 0;
     knob.set_mode(changedMode); //set mode to click
-    delay(50);
   }
 
   // Update libmapper connections

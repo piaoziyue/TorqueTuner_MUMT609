@@ -46,10 +46,11 @@
 
     <!-- tabindex="0" used to make div focusable, allowing for keyboard shortcuts -->
     <div class='toolbar'>
+        <button id="connect" onClick="connect()">Connect</button>
         <div class='button' id='midi-upload'>Upload</div>
         <div class='button' id='midi-clear'>Clear</div>
-        <button id="connect" onClick="connect()">Connect</button>
         <button id="openModal">User Info</button>
+        <button id="saveButton">Save</button>
     </div>
     <!-- <p id="test">test</p> -->
     <div data-role = 'header'>
@@ -66,6 +67,51 @@
     
     <script src="js/sketch.js"></script>
 
+    <div id="container">
+      <div class="pages">
+        
+        <div class="page one">
+          <div id="ff-container">
+            <div id="plot-container" ></div>
+            <div id="controls">
+              <h3 id="songTitle">Song 1</h3>
+              <div id="number-buttons"></div>
+              <!-- <button id="add-button">+</button> -->
+              <button onclick="slide('next'); pianoRoll.clearAllNotes();">Next</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="page two">
+          <div id="ff-container">
+            <div id="plot-container" ></div>
+            <div id="controls">
+              <h3 id="songTitle">Song 2</h3>
+              <div id="number-buttons"></div>
+              <!-- <button id="add-button">+</button> -->
+              <button onclick="slide('prev'); pianoRoll.clearAllNotes();">Prev</button>
+              <button onclick="slide('next'); pianoRoll.clearAllNotes();">Next</button>
+              
+            </div>
+          </div>
+        </div>
+
+        <div class="page three">
+          <div id="ff-container">
+            <div id="plot-container" ></div>
+            <div id="controls">
+              <h3 id="songTitle">Song 3</h3>
+              <div id="number-buttons"></div>
+              <!-- <button id="add-button">+</button> -->
+              <button onclick="slide('prev'); pianoRoll.clearAllNotes();">Prev</button>
+              <button onclick="slide('next'); pianoRoll.clearAllNotes();">Finish</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    
     <div class="container">
         <div class="left-part">
             <div id="btn_container">
@@ -100,7 +146,7 @@
         <h2>User information</h2>
         <form id="userForm">
           <label for="username">User ID:</label>
-          <input type="text" id="username" required>
+          <input type="text" id="username" placeholder="Enter ID"required>
           <br><br>
           <!-- <button type="submit">Submit</button> -->
         </form>

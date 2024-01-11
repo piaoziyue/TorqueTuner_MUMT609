@@ -67,7 +67,6 @@ Basic strategy for implementing multi-note modifications -
 - Calulate the mouse motion/deviation from the mousedown point on the target element
 - Use this mouse deviation info to control movement/resizing of all selected elements
 */
-
 class PianoRoll {
     constructor(containerElementId, playHandler, noteOnOffHandler){
         this.svgRoot; //the svg root element
