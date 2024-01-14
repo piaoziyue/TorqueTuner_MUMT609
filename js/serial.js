@@ -58,6 +58,7 @@ async function connect() {
 }
 
 function writeToStream(line) {
+    console.log("write");
     const writer = outputStream.getWriter();
     writer.write(line);
     writer.releaseLock();

@@ -47,7 +47,8 @@ function draw() {
   noStroke();
   fill('rgb(82,150,230)');
   ellipse(cursorX, cursorY, cursorRadius * 2);
-  rect(centerX-13,centerY+80-torque_visual, 25, 25+torque_visual);
+
+  rect(centerX-13,centerY+80-torque_visual*4, 25, 25+torque_visual*4);
 
   noFill();
   

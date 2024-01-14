@@ -12,6 +12,7 @@ var millisPerTick = 0;
 var endTime = 0;
 var numNotes = 0;
 var velocity =0.5;
+var pitchEven;
 
 for(var pitch=108; pitch>=21; pitch--) { // A0 to C8
   var note = noteFromMidiPitch(pitch);
@@ -39,6 +40,9 @@ function drawSong() {
       time += parseInt(event.deltaTime*millisPerTick);
       if(event.subtype === 'noteOn') {
         var pitch = event.noteNumber;
+
+        pitchEven =pitch;
+
         openNotes[pitch] = time;
       }
       else if(event.subtype === 'noteOff') {
@@ -73,6 +77,15 @@ function drawSong() {
         time:time
       });
     });
+
+    // if(pitchEven) pitchscale = -Math.floor(mapValue(pitchEven, 49, 70, -9, 1));
+    // else pitchscale = 5;
+    // if (thisMode[0] =='l'){
+    //   let sengMess = 'l' + pitchscale.toString() ;
+    //   console.log("write", pitchscale, pitchEven);
+    //   writeToStream(sengMess);
+    // }
+    
     if(endTime<time) endTime = time;
   });
 
@@ -193,6 +206,7 @@ function uploadMidiFile(file) {
       
     };
     reader.readAsBinaryString(file);
+
   }
 }
 

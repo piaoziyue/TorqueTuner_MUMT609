@@ -70,6 +70,7 @@ int OLD_VALUE = 9999;
 int OLD_STATE = 4;
 int MAX_MOTOR_STATES = 9;
 
+
 // I2C variables
 const uint8_t I2C_BUF_SIZE = 10;
 const uint8_t CHECKSUMSIZE = 2;
@@ -482,11 +483,11 @@ void loop() {
     else if(inputString == "m") changedMode = 1;
     else if(inputString == "w") changedMode = 2;
     else if(inputString == "i") changedMode = 3;
-    else if(inputString == "l") changedMode = 4;
     else if(inputString[0] == 'l') {
       int digit = inputString[1] - '0';
-      knob.max_torque *= static_cast<float>(digit) / 3;
-      printf("knob max: %f, %d\n", knob.max_torque, digit);    
+      float updateScaleFac = -0.2 * static_cast<float>(digit) + 3.8;
+      knob.lin_spring.setScaleFac(updateScaleFac);
+      printf("knob max: %f, %d\n", digit);    
       changedMode = 4;
     }
     else if(inputString == "e") changedMode = 5;

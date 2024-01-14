@@ -344,7 +344,21 @@ button {
   /* flex-direction: row; */
 }
 
-#plot-container {
+#plot-container1 {
+  width: 2050px;
+  height: 120px;
+  border: 1px solid #1594ba;
+  margin-left: 30px;
+}
+
+#plot-container2 {
+  width: 2050px;
+  height: 120px;
+  border: 1px solid #1594ba;
+  margin-left: 30px;
+}
+
+#plot-container3 {
   width: 2050px;
   height: 120px;
   border: 1px solid #1594ba;
@@ -395,4 +409,8 @@ button {
   flex-direction: column;
   gap: 10px;
   transition: all 1s;
+}
+
+h3 {
+  text-align: center;
 }

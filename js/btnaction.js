@@ -6,6 +6,8 @@
 // };
 var plotsData_angle = []; // Initial plot angle data
 var plotsData_torque = []; // Initial plot torque data
+var pageNum = 1;
+
 document.getElementById("resetAngle").onclick = function() {
     zeroAngle = angle;
     console.log("reset angle");
@@ -34,11 +36,14 @@ document.getElementById("haps2").addEventListener("click", function() {
   // });
   document.getElementById("hapd1").addEventListener("click", function() {
     //TODO: update date the mode to linear spring
-     pitchscale = 5;
-     thisMode = 'l' + pitchscale.toString() ;
-     console.log("linear", thisMode);
-     writeToStream(thisMode);
+     
+     if(pitchEven) pitchscale = -Math.floor(mapValue(pitchEven, 49, 70, -9, -1));
+     else pitchscale = 5;
 
+     thisMode = 'l' + pitchscale.toString() ;
+     console.log("linear", pitchscale, pitchEven);
+     writeToStream(thisMode);
+     
      zeroAngle = angle;
    });
   document.getElementById("hapd2").addEventListener("click", function() {
@@ -102,8 +107,12 @@ function mapValue(value, oldMin, oldMax, newMin, newMax) {
 
 // Plot the data using D3.js
 function plotData(xCoords, yCoords, plotIndex, color) {
+  let container;
+  if (pageNum == 1) container = "#plot-container1";
+  else if (pageNum == 2) container = "#plot-container2";
+  else if (pageNum == 3) container = "#plot-container3";
 
-  const plotContainer = d3.select("#plot-container");
+  const plotContainer = d3.select(container);
 
   // Clear existing plot
   plotContainer.selectAll("svg").remove();
@@ -113,7 +122,7 @@ function plotData(xCoords, yCoords, plotIndex, color) {
   const plotHeight = plotContainer.node().getBoundingClientRect().height;
 
   // Create an SVG container within the "plot-container" div with translation
-  var svg = d3.select("#plot-container")
+  var svg = d3.select(container)
               .append("svg")
               .attr("width", plotWidth)
               .attr("height", plotHeight)
@@ -127,7 +136,7 @@ function plotData(xCoords, yCoords, plotIndex, color) {
   
   // Combine the x and y coordinates into an array of objects
   var data = xCoords.map(function(d, i) {
-    return { x: d, y: yCoords[i] };
+    return { x: d, y: yCoords[i]+20 };
   });
 
   // Append a path element to the SVG and set its "d" attribute using the line generator
@@ -215,6 +224,8 @@ const pages = document.querySelectorAll(".page");
     slide = (direction) => {
 
       direction === "next" ? translate -= translateAmount : translate += translateAmount;
+      pageNum = -(translate/100)+1;
+
       dataX_ang = [];
       dataY_ang = [];
 
@@ -267,8 +278,16 @@ document.getElementById('saveButton').addEventListener('click', function () {
   const link = document.createElement('a');
   link.href = window.URL.createObjectURL(blob);
 
+  let songname = document.getElementById('midi-info');
+  let pitchname = songname.textContent.slice(0, 2);
+
+  let ffname = document.getElementById('mode');
+  let ffacr = ffname.textContent.slice(0, 1);
+
+  console.log()
+
   // Set the download attribute with the desired file name
-  link.download = `${ID}_${name}.csv`;
+  link.download = `${ID}_ff${ffacr}_${pitchname}.csv`;
 
   // Append the link to the body
   document.body.appendChild(link);

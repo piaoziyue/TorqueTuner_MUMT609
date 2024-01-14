@@ -986,12 +986,12 @@ class PianoRoll {
 
     setPlayHandler (playHandler, pitchOrVelo, value){
         let restartNoteTime = Tone.now()
-        if (pitchOrVelo == "pitch"){
-            let newPitch = playHandler.pitch + value;
-            let newPitchString = typeof newPitch === 'string' ? newPitch : this.midiPitchToPitchString(newPitch);
-            sampler.triggerAttackRelease(newPitchString, playHandler.duration-(restartNoteTime-startNoteTime), restartNoteTime, playHandler.velocity);
-        }else if(pitchOrVelo == "velocity"){
-            sampler.triggerAttackRelease(playHandler.PitchString, playHandler.duration-(restartNoteTime-startNoteTime), restartNoteTime, value);
-        }
+        // if (pitchOrVelo == "pitch"){
+        //     let newPitch = playHandler.pitch + value;
+        //     let newPitchString = typeof newPitch === 'string' ? newPitch : this.midiPitchToPitchString(newPitch);
+        //     sampler.triggerAttackRelease(newPitchString, playHandler.duration-(restartNoteTime-startNoteTime), restartNoteTime, playHandler.velocity);
+        // }else if(pitchOrVelo == "velocity"){
+        //     sampler.triggerAttackRelease(playHandler.PitchString, playHandler.duration-(restartNoteTime-startNoteTime), restartNoteTime, value);
+        // }
     }
 }

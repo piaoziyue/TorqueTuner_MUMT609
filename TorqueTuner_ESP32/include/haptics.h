@@ -15,7 +15,7 @@
 
 const int TABLE_RESOLUTION = 65535;
 const int MAX_TORQUE = 100;
-const int WALL_TORQUE = 180;
+const int WALL_TORQUE = 250;
 const float MAX_VELOCITY = 500;
 
 class Mode
@@ -41,8 +41,6 @@ public:
     char name = 'f';
     int idx = 0;
     int state = 0;
-    
-
 };
 
 class Noresist: public Mode
@@ -122,6 +120,10 @@ public:
         name = 'l';
     }
     int16_t calc(void* ptr);
+    void setScaleFac(float newScaleFac);
+
+private:
+    float scale_fac;
 };
 
 class Free: public Mode
@@ -222,7 +224,7 @@ public:
     // PERFORMANCE
     int16_t performed_angles[3] = {0,0,0}; //also hard coded as 3 for now
     int16_t width = 600; // distance from target to max torque, higher is harder
-	float max_torque = 3.0; // higher is easier
+	float max_torque = 80.0; // higher is easier
     // SCORE
     int score = 0; 
     int max_score = 1000;
