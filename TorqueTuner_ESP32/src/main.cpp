@@ -487,7 +487,7 @@ void loop() {
       int digit = inputString[1] - '0';
       float updateScaleFac = -0.2 * static_cast<float>(digit) + 3.8;
       knob.lin_spring.setScaleFac(updateScaleFac);
-      printf("knob max: %f, %d\n", digit);    
+      // printf("knob max: %f, %d\n", digit);    
       changedMode = 4;
     }
     else if(inputString == "e") changedMode = 5;

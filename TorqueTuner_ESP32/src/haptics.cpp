@@ -232,7 +232,7 @@ int16_t LinSpring::calc(void* ptr) {
 	if (knob->angle_out != 0 && knob->velocity_out !=0){
 		val = - (knob->angle_out) / 1800.0; //-(knob->angle_out - 1800) / 1800.0;
 		if (knob->angle_unclipped <= min) {
-			val = 1;
+			val =0.05;
 		} else if (knob->angle_unclipped >= max) {
 			val = -1;
 		}

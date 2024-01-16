@@ -9,7 +9,7 @@ var newPitchMidi;
 var playingFlagX;
 var notes;
 var pitchSignal = new Tone.Signal(0);
-var pitchRange = 7;
+var pitchRange = 12;
 
 function pianoRollToToneEvents(pianoRoll){
     notes = pianoRoll.notes;
@@ -139,6 +139,8 @@ function playPianoRoll(pianoRoll){
         // console.log("pitch", pianoRoll.notes[noteIndex].info.pitch)
         let keysArray = Object.keys(pianoRoll.notes);
         let noteNum = keysArray.length;
+
+
         // console.log("modethis", thisMode[0] == 'l');
         if (noteNum>noteIndex)
             noteIndex += 1;
@@ -146,18 +148,10 @@ function playPianoRoll(pianoRoll){
         
         durThisNote = Math.round(value.dur*2)/2;
         pitchOfNote = value.pitch;
-        
-        angleDelta = angle - zeroAngle;
-        if (angleDelta > 1800) angleDelta = 3600 - angleDelta;
-        else if (angleDelta < -1800) angleDelta = -3600 - angleDelta;
 
-        midiChanges = mapValue(angleDelta, -1800, 1800, -pitchRange, pitchRange);
+        sampler.triggerAttackRelease(pitchOfNote, durThisNote, time, 0.5);
         pitchSignal.linearRampTo(midiChanges, 0.1);
         shifter.pitch = midiChanges;
-        
-        // Use the adjusted pitch for triggering the note
-        let adjustedPitch = new Tone.Frequency(value.pitch).transpose(midiChanges).toNote();
-        sampler.triggerAttackRelease(adjustedPitch, durThisNote, time, 0.5);
 
         preInd = value.info.ind;
 
@@ -166,8 +160,15 @@ function playPianoRoll(pianoRoll){
             preInd = -1;
         }
          
+        // zeroAngle = angle;
     }, toneEvents)
     .start();
+    // playingPart.stop("+0n", () => {
+    //     // Your additional code here...
+    //     // This will be executed when the part stops
+    //     zeroAngle = angle;
+    //     console.log("Part stopped!");
+    // });
     pianoRollIsPlaying = true;
      
     // NProgress.start();
@@ -177,11 +178,13 @@ function playPianoRoll(pianoRoll){
         angleDelta = angle - zeroAngle;
         if (angleDelta > 1800) angleDelta = 3600 - angleDelta;
         else if (angleDelta < -1800) angleDelta = -3600 - angleDelta;
+        else if (angleDelta < 10 && angleDelta > -10) angleDelta =0;
 
         midiChanges = mapValue(angleDelta, -1800, 1800, -pitchRange, pitchRange);
-
         pitchSignal.linearRampTo(midiChanges, 0.1);
         shifter.pitch = pitchSignal.value;
+
+        console.log("midi", angle, zeroAngle, midiChanges, )
 
         playingFlagBeat = (playingFlagX + 50) / 64;
 
@@ -195,7 +198,7 @@ function playPianoRoll(pianoRoll){
         
         // console.log("change", noteIndex, noteNum)
         
-    }, 0.05).start(0);
+    }, 0.02).start(0);
     playingNote = null;
     
 }
@@ -259,8 +262,6 @@ const sampler = new Tone.Sampler({
         // 'G4': 'G4.mp3',
     },
 
-    // Cela règle la durée de permanence des notes jouées
-    // release: 10,
     baseUrl: "samples/guzheng/"
 }).toDestination();
 sampler.connect(shifter);
@@ -287,7 +288,7 @@ SVG.on(document, 'DOMContentLoaded', function() {
         let pitchString = typeof pitch === 'string' ? pitch : this.midiPitchToPitchString(pitch);
         startNoteTime = Tone.now();
 
-        // sampler.triggerAttackRelease(pitchString, duration, startNoteTime, velocity);
+        // sampler.triggerAttackRelease();
 
         // Keep track of the currently playing note
         currentlyPlayingNotes.push(pitchString);

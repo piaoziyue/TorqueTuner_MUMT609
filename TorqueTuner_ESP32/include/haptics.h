@@ -114,7 +114,7 @@ public:
 class LinSpring: public Mode
 {
 public:
-    LinSpring() : Mode(MAX_TORQUE, 0.5, 0, 3600) {
+    LinSpring() : Mode(MAX_TORQUE, 0.5, 0, 2700) {
         wrap_output = true;
         wrap_haptics = false;
         name = 'l';
