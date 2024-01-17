@@ -198,11 +198,11 @@ int16_t Click::calc(void* ptr) {
 	float val=0;
 	if (knob->angle_out != 0 && knob->velocity_out !=0){
 		if (knob->angle_out <= min) {
-			val = WALL_TORQUE  ;
+			val = WALL_TORQUE ;
 		} else if (knob->angle_out >= max) {
 			val = -WALL_TORQUE ;
 		} else {
-			val = static_cast<float>((tf_click[idx])) / TABLE_RESOLUTION * knob->scale *1.5;
+			val = static_cast<float>((tf_click[idx])) / TABLE_RESOLUTION * knob->scale * 1.28; // * 1.25;
 		}
 	}
 	return static_cast<int16_t> (round(val));
@@ -232,11 +232,13 @@ int16_t LinSpring::calc(void* ptr) {
 	if (knob->angle_out != 0 && knob->velocity_out !=0){
 		val = - (knob->angle_out) / 1800.0; //-(knob->angle_out - 1800) / 1800.0;
 		if (knob->angle_unclipped <= min) {
-			val =0.05;
+			val = 0.1;
 		} else if (knob->angle_unclipped >= max) {
 			val = -1;
 		}
 		val *= knob->scale/scale_fac;
+		// printf("scaf %f /n ", scale_fac);
+		// printf("val %f  velocity % f  knob.angle %f\n", val, knob->velocity_out, knob->angle_unclipped);
 	}else val = 0;
 	
 	return static_cast<int16_t> (round(val));

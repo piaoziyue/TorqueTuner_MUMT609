@@ -9,7 +9,9 @@ var newPitchMidi;
 var playingFlagX;
 var notes;
 var pitchSignal = new Tone.Signal(0);
-var pitchRange = 12;
+var pitchRange =20;
+var timeStart;
+var timeLoop;
 
 function pianoRollToToneEvents(pianoRoll){
     notes = pianoRoll.notes;
@@ -150,8 +152,9 @@ function playPianoRoll(pianoRoll){
         pitchOfNote = value.pitch;
 
         sampler.triggerAttackRelease(pitchOfNote, durThisNote, time, 0.5);
+        // sampler.triggerAttack(pitchOfNote);
         pitchSignal.linearRampTo(midiChanges, 0.1);
-        shifter.pitch = midiChanges;
+        // shifter.pitch = midiChanges;
 
         preInd = value.info.ind;
 
@@ -159,8 +162,9 @@ function playPianoRoll(pianoRoll){
             pianoRollIsPlaying = false;
             preInd = -1;
         }
-         
+        timeStart = time;
         // zeroAngle = angle;
+
     }, toneEvents)
     .start();
     // playingPart.stop("+0n", () => {
@@ -182,9 +186,17 @@ function playPianoRoll(pianoRoll){
 
         midiChanges = mapValue(angleDelta, -1800, 1800, -pitchRange, pitchRange);
         pitchSignal.linearRampTo(midiChanges, 0.1);
-        shifter.pitch = pitchSignal.value;
+        // sampler.triggerRelease([pitchOfNote], Tone.now())
 
-        console.log("midi", angle, zeroAngle, midiChanges, )
+        timeLoop = time;
+        // console.log("time", timeStart, timeLoop)
+
+        if(timeLoop - timeStart > 0.5) shifter.pitch = pitchSignal.value;
+        else {
+            sampler.triggerRelease([pitchOfNote], Tone.now())
+            // zeroAngle = angle + 5;
+            sampler.connect(shifter);
+        }
 
         playingFlagBeat = (playingFlagX + 50) / 64;
 
@@ -264,7 +276,6 @@ const sampler = new Tone.Sampler({
 
     baseUrl: "samples/guzheng/"
 }).toDestination();
-sampler.connect(shifter);
 
 
 SVG.on(document, 'DOMContentLoaded', function() {

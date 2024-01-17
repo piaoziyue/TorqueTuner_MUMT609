@@ -136,7 +136,7 @@ function plotData(xCoords, yCoords, plotIndex, color) {
   
   // Combine the x and y coordinates into an array of objects
   var data = xCoords.map(function(d, i) {
-    return { x: d, y: yCoords[i]+20 };
+    return { x: d, y: yCoords[i]*3 - 58 };
   });
 
   // Append a path element to the SVG and set its "d" attribute using the line generator
