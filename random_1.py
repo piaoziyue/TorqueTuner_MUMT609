@@ -26,7 +26,7 @@ if __name__ == "__main__":
     click_sequence = generate_click_sequence()
 
     print("User ID:", user_id)
-    print("Force feedback Sequence (1-linear spring; 2-non, 3-click):", linear_spring_sequence)
-    print("Pitch Sequence for L (1-E2, 2-C3, 3-G3):", pitch_sequence)
-    print("Non FF Sequence (1-light, 2-dou, 3-rou):", non_ff_sequence)
-    print("Click Sequence (1-light, 2-dou, 3-rou):", click_sequence)
+    # print("Force feedback Sequence (1-linear spring; 2-non, 3-click):", linear_spring_sequence)
+    # print("Pitch Sequence for L (1-E2, 2-C3, 3-G3):", pitch_sequence)
+    # print("Non FF Sequence (1-light, 2-dou, 3-rou):", non_ff_sequence)
+    # print("Click Sequence (1-light, 2-dou, 3-rou):", click_sequence)
